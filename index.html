@@ -4,76 +4,180 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wedding RSVP</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Tinos:wght@700&display=swap" rel="stylesheet">
+
   <style>
-    body { font-family: Arial, sans-serif; background: #fafafa; text-align: center; padding: 30px; }
-    .hidden { display: none; }
-    form { margin: 20px auto; max-width: 400px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1);}
-    input, button { width: 100%; padding: 10px; margin: 10px 0; }
-    button { background: #4CAF50; color: white; border: none; cursor: pointer; }
-    button:hover { background: #45a049; }
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: #c3bdb5 url('Wedding.gif') no-repeat center bottom fixed;
+      background-size: cover;
+      text-align: center;
+      padding: 30px;
+      color: #4B2E2E;
+    }
+    h1, h2 {
+      font-family: 'Tinos', serif;
+      font-weight: 700;
+      font-size: 2.5em;
+      color: #4B2E2E;
+    }
+    .screen {
+      margin: 20px auto;
+      max-width: 420px;
+      background: #d4d0c7;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.2);
+      display: none;
+    }
+    input, select, button {
+      width: 85%;
+      padding: 10px;
+      margin: 10px 0;
+      font-family: 'Raleway', sans-serif;
+      border-radius: 6px;
+      border: 1px solid #c9b6b3;
+    }
+    button {
+      background: #b5aba4;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #c9b6b3;
+    }
+    #thankYou { display: none; }
   </style>
 </head>
 <body>
 
   <h1>RSVP for Our Wedding 💍</h1>
-  <p>Please enter your RSVP code to begin</p>
-
-  <div id="codeSection">
-    <input type="text" id="rsvpCode" placeholder="Enter your code" />
-    <button onclick="checkCode()">Continue</button>
+  
+  <!-- Screen 1 -->
+  <div id="selectScreen" class="screen" style="display:block;">
+    <p>Please select your name from the list</p>
+    <select id="guestName">
+      <option value="">-- Select Your Name --</option>
+      <option value="BAUTISTA, ROSARIO">BAUTISTA, ROSARIO</option>
+      <option value="CASTRO, RICARDO">CASTRO, RICARDO</option>
+      <option value="CRUZ, MIGUEL">CRUZ, MIGUEL</option>
+      <option value="DE LEON, PATRICK">DE LEON, PATRICK</option>
+      <option value="DIAZ, VICTORIA">DIAZ, VICTORIA</option>
+      <option value="DOMINGO, ALBERTO">DOMINGO, ALBERTO</option>
+      <option value="FERNANDEZ, JORGE">FERNANDEZ, JORGE</option>
+      <option value="FLORES, MONICA">FLORES, MONICA</option>
+      <option value="GUERRERO, PIA">GUERRERO, PIA</option>
+      <option value="LOPEZ, ANGELA">LOPEZ, ANGELA</option>
+      <option value="MENDOZA, CLARA">MENDOZA, CLARA</option>
+      <option value="NAVARRO, ELAINE">NAVARRO, ELAINE</option>
+      <option value="OCAMPO, IVAN">OCAMPO, IVAN</option>
+      <option value="PEREZ, SIMON">PEREZ, SIMON</option>
+      <option value="RAMIREZ, HECTOR">RAMIREZ, HECTOR</option>
+      <option value="RAMOS, PEDRO">RAMOS, PEDRO</option>
+      <option value="REYES, DANIELA">REYES, DANIELA</option>
+      <option value="REYES, MARIA">REYES, MARIA</option>
+      <option value="SALAZAR, BENJAMIN">SALAZAR, BENJAMIN</option>
+      <option value="SANTIAGO, LORENA">SANTIAGO, LORENA</option>
+      <option value="TORRES, GABRIEL">TORRES, GABRIEL</option>
+      <option value="VILLANUEVA, CARLA">VILLANUEVA, CARLA</option>
+    </select>
+    <button onclick="checkName()">Continue</button>
   </div>
 
-  <form id="rsvpForm" class="hidden" onsubmit="submitRSVP(event)">
+  <!-- Screen 2 -->
+  <form id="rsvpForm" class="screen">
     <h2>Guest Names</h2>
     <div id="guestFields"></div>
     <button type="submit">Submit RSVP</button>
   </form>
 
-  <div id="thankYou" class="hidden">
+  <!-- Thank you screen -->
+  <div id="thankYou" class="screen">
     <h2>Thank you! Your RSVP has been submitted 🎉</h2>
   </div>
 
 <script>
-  // Example codes and seat allocations
-  const inviteList = {
-    "DELA CRUZ, JUAN": 4,
-    "SANTOS, ANA": 2,
-    "GOMEZ, LUIS": 1
-  };
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymvd1sps44V9AWL1Y2sbqo4DAek0z4syr17IYsvkJfj8D0CYU1AVrlbPqxSW1xW-KQ/exec";
 
-  let maxGuests = 0;
+const inviteList = {
+  "BAUTISTA, ROSARIO": 10,
+  "CASTRO, RICARDO": 2,
+  "CRUZ, MIGUEL": 2,
+  "DE LEON, PATRICK": 2,
+  "DIAZ, VICTORIA": 4,
+  "DOMINGO, ALBERTO": 3,
+  "FERNANDEZ, JORGE": 2,
+  "FLORES, MONICA": 2,
+  "GUERRERO, PIA": 1,
+  "LOPEZ, ANGELA": 2,
+  "MENDOZA, CLARA": 1,
+  "NAVARRO, ELAINE": 3,
+  "OCAMPO, IVAN": 2,
+  "PEREZ, SIMON": 4,
+  "RAMIREZ, HECTOR": 2,
+  "RAMOS, PEDRO": 2,
+  "REYES, DANIELA": 2,
+  "REYES, MARIA": 3,
+  "SALAZAR, BENJAMIN": 1,
+  "SANTIAGO, LORENA": 2,
+  "TORRES, GABRIEL": 3,
+  "VILLANUEVA, CARLA": 4
+};
 
-  function checkCode() {
-    const code = document.getElementById('rsvpCode').value.trim().toUpperCase();
-    if (inviteList[code]) {
-      maxGuests = inviteList[code];
-      document.getElementById('codeSection').classList.add('hidden');
-      document.getElementById('rsvpForm').classList.remove('hidden');
-      createGuestFields(maxGuests);
-    } else {
-      alert("Invalid code. Please check your invitation.");
-    }
+let maxGuests = 0;
+let selectedName = "";
+
+function checkName() {
+  selectedName = document.getElementById('guestName').value;
+  if (inviteList[selectedName]) {
+    maxGuests = inviteList[selectedName];
+    document.getElementById('selectScreen').style.display = 'none';
+    document.getElementById('rsvpForm').style.display = 'block';
+    createGuestFields(maxGuests);
+  } else {
+    alert("Please select your name from the list.");
   }
+}
 
-  function createGuestFields(n) {
-    const container = document.getElementById('guestFields');
-    container.innerHTML = "";
-    for (let i = 1; i <= n; i++) {
-      const input = document.createElement('input');
-      input.type = "text";
-      input.name = `guest${i}`;
-      input.placeholder = `Guest ${i} Full Name`;
-      input.required = true;
-      container.appendChild(input);
-    }
+function createGuestFields(n) {
+  const container = document.getElementById('guestFields');
+  container.innerHTML = "";
+  for (let i = 1; i <= n; i++) {
+    const input = document.createElement('input');
+    input.type = "text";
+    input.name = `guest${i}`;
+    input.placeholder = `Guest ${i} Full Name`;
+    input.required = true;
+    container.appendChild(input);
   }
+}
 
-  function submitRSVP(event) {
-    event.preventDefault();
-    // Normally, you'd send data to a server or Google Sheets here
-    document.getElementById('rsvpForm').classList.add('hidden');
-    document.getElementById('thankYou').classList.remove('hidden');
-  }
+document.getElementById('rsvpForm').addEventListener('submit', submitRSVP);
+
+function submitRSVP(event) {
+  event.preventDefault();
+
+  const guests = [];
+  document.querySelectorAll('#guestFields input').forEach(input => guests.push(input.value));
+
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ selectedName, guests })
+  })
+  .then(res => res.text())
+  .then(result => {
+    console.log("Server response:", result);
+    document.getElementById('rsvpForm').style.display = 'none';
+    document.getElementById('thankYou').style.display = 'block';
+  })
+  .catch(err => console.error("Fetch error:", err));
+}
 </script>
 
 </body>
