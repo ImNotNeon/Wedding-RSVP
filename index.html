@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding RSVP</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fafafa; text-align: center; padding: 30px; }
+    .hidden { display: none; }
+    form { margin: 20px auto; max-width: 400px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1);}
+    input, button { width: 100%; padding: 10px; margin: 10px 0; }
+    button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+    button:hover { background: #45a049; }
+  </style>
+</head>
+<body>
+
+  <h1>RSVP for Our Wedding 💍</h1>
+  <p>Please enter your RSVP code to begin</p>
+
+  <div id="codeSection">
+    <input type="text" id="rsvpCode" placeholder="Enter your code" />
+    <button onclick="checkCode()">Continue</button>
+  </div>
+
+  <form id="rsvpForm" class="hidden" onsubmit="submitRSVP(event)">
+    <h2>Guest Names</h2>
+    <div id="guestFields"></div>
+    <button type="submit">Submit RSVP</button>
+  </form>
+
+  <div id="thankYou" class="hidden">
+    <h2>Thank you! Your RSVP has been submitted 🎉</h2>
+  </div>
+
+<script>
+  // Example codes and seat allocations
+  const inviteList = {
+    "DELA CRUZ, JUAN": 4,
+    "SANTOS, ANA": 2,
+    "GOMEZ, LUIS": 1
+  };
+
+  let maxGuests = 0;
+
+  function checkCode() {
+    const code = document.getElementById('rsvpCode').value.trim().toUpperCase();
+    if (inviteList[code]) {
+      maxGuests = inviteList[code];
+      document.getElementById('codeSection').classList.add('hidden');
+      document.getElementById('rsvpForm').classList.remove('hidden');
+      createGuestFields(maxGuests);
+    } else {
+      alert("Invalid code. Please check your invitation.");
+    }
+  }
+
+  function createGuestFields(n) {
+    const container = document.getElementById('guestFields');
+    container.innerHTML = "";
+    for (let i = 1; i <= n; i++) {
+      const input = document.createElement('input');
+      input.type = "text";
+      input.name = `guest${i}`;
+      input.placeholder = `Guest ${i} Full Name`;
+      input.required = true;
+      container.appendChild(input);
+    }
+  }
+
+  function submitRSVP(event) {
+    event.preventDefault();
+    // Normally, you'd send data to a server or Google Sheets here
+    document.getElementById('rsvpForm').classList.add('hidden');
+    document.getElementById('thankYou').classList.remove('hidden');
+  }
+</script>
+
+</body>
+</html>
