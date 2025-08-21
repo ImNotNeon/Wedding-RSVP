@@ -67,35 +67,34 @@
     #thankYou, #sorryMessage { display: none; }
 
     /* Autocomplete dropdown */
-  .autocomplete-suggestions {
-      position: absolute;
-      background: #ffffff; /* white background */
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 1000;
+    .autocomplete-suggestions {
+        position: absolute;
+        background: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
 
-      /* Ensures it’s not squished on mobile */
-      min-width: 250px; 
-      width: calc(100% - 40px); 
-      left: 50%;
-      transform: translateX(-50%);
-    }
+        min-width: 250px; 
+        width: calc(100% - 40px); 
+        left: 50%;
+        transform: translateX(-50%);
+      }
 
-    .autocomplete-suggestions div {
-      background: #ffffff; /* white for each option */
-      padding: 10px;
-      cursor: pointer;
-      font-family: 'Raleway', sans-serif;
-      font-size: 1em;
-      color: #4B2E2E;
-    }
+      .autocomplete-suggestions div {
+        background: #ffffff;
+        padding: 10px;
+        cursor: pointer;
+        font-family: 'Raleway', sans-serif;
+        font-size: 1em;
+        color: #4B2E2E;
+      }
 
-    .autocomplete-suggestions div:hover {
-      background: #f2f2f2; /* subtle gray hover */
-    }
+      .autocomplete-suggestions div:hover {
+        background: #f2f2f2;
+      }
     .highlight {
       font-weight: bold;
       color: #4B2E2E;
@@ -106,19 +105,19 @@
 
   <h1>RSVP for Our Wedding 💍</h1>
 
-  <!-- Screen 1 -->
-  <div id="selectScreen" class="screen" style="display:block;">
-    <p>Will you be attending our wedding? 💍</p>
-    <button onclick="startRSVP(true)">Yes</button>
-    <button onclick="startRSVP(false)">No</button>
-  </div>
-
-  <!-- Name input screen -->
-  <div id="nameScreen" class="screen">
+  <!-- Name input screen (FIRST) -->
+  <div id="nameScreen" class="screen" style="display:block;">
     <p>Please enter your full name</p>
     <input type="text" id="guestNameInput" placeholder="Enter your name" autocomplete="off"/>
     <div id="autocomplete-list" class="autocomplete-suggestions"></div>
     <button onclick="checkName()">Continue</button>
+  </div>
+
+  <!-- Attendance question (SECOND) -->
+  <div id="selectScreen" class="screen">
+    <p>Will you be attending our wedding? 💍</p>
+    <button onclick="startRSVP(true)">Yes</button>
+    <button onclick="startRSVP(false)">No</button>
   </div>
 
   <!-- Seat selection screen -->
@@ -156,15 +155,6 @@ const inviteList = {
 
 let maxGuests = 0;
 let selectedName = "";
-
-function startRSVP(answer) {
-  document.getElementById('selectScreen').style.display = 'none';
-  if (answer) {
-    document.getElementById('nameScreen').style.display = 'block';
-  } else {
-    document.getElementById('sorryScreen').style.display = 'block';
-  }
-}
 
 // Autocomplete logic
 const input = document.getElementById("guestNameInput");
@@ -214,11 +204,20 @@ function checkName() {
   if (inviteList[selectedName]) {
     maxGuests = inviteList[selectedName];
     document.getElementById('nameScreen').style.display = 'none';
+    document.getElementById('selectScreen').style.display = 'block';
+  } else {
+    alert("Name not found. Please enter your name exactly as given on the invitation.");
+  }
+}
+
+function startRSVP(answer) {
+  document.getElementById('selectScreen').style.display = 'none';
+  if (answer) {
     document.getElementById('seatScreen').style.display = 'block';
     document.getElementById('seatMessage').innerText = `We've reserved ${maxGuests} seats for you!`;
     document.getElementById('seatCountInput').setAttribute("max", maxGuests);
   } else {
-    alert("Name not found. Please enter your name exactly as given on the invitation.");
+    document.getElementById('sorryScreen').style.display = 'block';
   }
 }
 
