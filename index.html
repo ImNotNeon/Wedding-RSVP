@@ -67,26 +67,34 @@
     #thankYou, #sorryMessage { display: none; }
 
     /* Autocomplete dropdown */
-    .autocomplete-suggestions {
+  .autocomplete-suggestions {
       position: absolute;
-      background: white;
-      border: 1px solid #c9b6b3;
+      background: #ffffff; /* white background */
+      border: 1px solid #ccc;
       border-radius: 6px;
-      max-height: 150px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      max-height: 200px;
       overflow-y: auto;
-      width: 85%; /* ✅ Match input width */
+      z-index: 1000;
+
+      /* Ensures it’s not squished on mobile */
+      min-width: 250px; 
+      width: calc(100% - 40px); 
       left: 50%;
-      transform: translateX(-50%); /* ✅ Keep it centered */
-      z-index: 10;
-      display: none;
+      transform: translateX(-50%);
     }
-    .autocomplete-suggestion {
-      padding: 8px;
+
+    .autocomplete-suggestions div {
+      background: #ffffff; /* white for each option */
+      padding: 10px;
       cursor: pointer;
-      text-align: left;
+      font-family: 'Raleway', sans-serif;
+      font-size: 1em;
+      color: #4B2E2E;
     }
-    .autocomplete-suggestion:hover {
-      background: #eee;
+
+    .autocomplete-suggestions div:hover {
+      background: #f2f2f2; /* subtle gray hover */
     }
     .highlight {
       font-weight: bold;
