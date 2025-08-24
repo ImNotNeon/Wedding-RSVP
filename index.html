@@ -105,22 +105,22 @@
 
   <h1>RSVP for Our Wedding 💍</h1>
 
-  <!-- Name input screen (FIRST) -->
-  <div id="nameScreen" class="screen" style="display:block;">
+  <!-- Attendance question (FIRST) -->
+  <div id="selectScreen" class="screen" style="display:block;">
+    <p>Will you be attending our wedding? 💍</p>
+    <button onclick="startRSVP(true)">Yes</button>
+    <button onclick="startRSVP(false)">No</button>
+  </div>
+
+  <!-- Name input screen (SECOND) -->
+  <div id="nameScreen" class="screen">
     <p>Please enter your full name</p>
     <input type="text" id="guestNameInput" placeholder="Enter your name" autocomplete="off"/>
     <div id="autocomplete-list" class="autocomplete-suggestions"></div>
     <button onclick="checkName()">Continue</button>
   </div>
 
-  <!-- Attendance question (SECOND) -->
-  <div id="selectScreen" class="screen">
-    <p>Will you be attending our wedding? 💍</p>
-    <button onclick="startRSVP(true)">Yes</button>
-    <button onclick="startRSVP(false)">No</button>
-  </div>
-
-  <!-- Seat selection screen -->
+  <!-- Seat selection screen (THIRD) -->
   <div id="seatScreen" class="screen">
     <h2 id="seatMessage"></h2>
     <p>How many seats will you be occupying?</p>
@@ -128,14 +128,14 @@
     <button onclick="confirmSeats()">Confirm</button>
   </div>
 
-  <!-- RSVP form -->
+  <!-- RSVP form (FOURTH) -->
   <form id="rsvpForm" class="screen">
     <h2>Guest Names</h2>
     <div id="guestFields"></div>
     <button type="submit">Submit RSVP</button>
   </form>
 
-  <!-- Thank you / decline -->
+  <!-- Thank you / decline (FINAL) -->
   <div id="thankYou" class="screen">
     <h3>Thank you! Your RSVP has been submitted.</h3>
     <h3>Your presence will make our day even more special! 🎉</h3>
@@ -145,150 +145,126 @@
     <h4>We’ll celebrate with you in spirit 💕</h4>
   </div>
 
-<script>
-const inviteList = {
-  "MARIBEL CHUA": 4,
-  "ANDREW CO": 5,
-  "ELMER LIM": 3,
-  "STANLEY LIM": 5
-};
+  <script>
+  const inviteList = {
+    "MARIBEL CHUA": 4,
+    "ANDREW CO": 5,
+    "ELMER LIM": 3,
+    "STANLEY LIM": 5
+  };
 
-let maxGuests = 0;
-let selectedName = "";
-let attendance = "";
-let guestNumber = 0;
+  let maxGuests = 0;
+  let selectedName = "";
+  let guestNumber = 0;
+  let attendance = "";
 
-// Autocomplete logic
-const input = document.getElementById("guestNameInput");
-const suggestionBox = document.getElementById("autocomplete-list");
+  // Autocomplete
+  const input = document.getElementById("guestNameInput");
+  const suggestionBox = document.getElementById("autocomplete-list");
 
-input.addEventListener("input", function() {
-  const query = this.value.toUpperCase();
-  suggestionBox.innerHTML = "";
-
-  if (!query) {
-    suggestionBox.style.display = "none";
-    return;
-  }
-
-  const matches = Object.keys(inviteList).filter(name => name.includes(query));
-  if (matches.length === 0) {
-    suggestionBox.style.display = "none";
-    return;
-  }
-
-  suggestionBox.style.display = "block";
-  matches.forEach(match => {
-    const div = document.createElement("div");
-    div.classList.add("autocomplete-suggestion");
-    div.innerHTML = match.replace(new RegExp(query, "gi"), 
-      (m) => `<span class="highlight">${m}</span>`);
-    div.onclick = function() {
-      input.value = match;
-      suggestionBox.innerHTML = "";
-      suggestionBox.style.display = "none";
-    };
-    suggestionBox.appendChild(div);
-  });
-});
-
-input.addEventListener("keydown", function(e) {
-  if (e.key === "Escape") {
+  input.addEventListener("input", function() {
+    const query = this.value.toUpperCase();
     suggestionBox.innerHTML = "";
-    suggestionBox.style.display = "none";
-  }
-});
 
-function checkName() {
-  selectedName = input.value.trim().toUpperCase();
-  if (inviteList[selectedName]) {
-    maxGuests = inviteList[selectedName];
-    document.getElementById('nameScreen').style.display = 'none';
-    document.getElementById('selectScreen').style.display = 'block';
-  } else {
-    alert("Name not found. Please enter your name exactly as given on the invitation.");
-  }
-}
-
-function startRSVP(answer) {
-  document.getElementById('selectScreen').style.display = 'none';
-  attendance = answer ? "Yes" : "No";
-
-  if (answer) {
-    document.getElementById('seatScreen').style.display = 'block';
-    document.getElementById('seatMessage').innerText = `We've reserved ${maxGuests} seats for you!`;
-    document.getElementById('seatCountInput').setAttribute("max", maxGuests);
-  } else {
-    // No response → guestNumber = 0
-    submitRSVP([]);
-    document.getElementById('sorryScreen').style.display = 'block';
-  }
-}
-
-function confirmSeats() {
-  const count = parseInt(document.getElementById('seatCountInput').value, 10);
-  if (isNaN(count) || count < 1 || count > maxGuests) {
-    alert(`Please enter a valid number between 1 and ${maxGuests}.`);
-    return;
-  }
-  guestNumber = count; // save number of seats
-  document.getElementById('seatScreen').style.display = 'none';
-  document.getElementById('rsvpForm').style.display = 'block';
-  createGuestFields(count);
-}
-
-function createGuestFields(n) {
-  const container = document.getElementById('guestFields');
-  container.innerHTML = "";
-  for (let i = 1; i <= n; i++) {
-    const input = document.createElement('input');
-    input.type = "text";
-    input.name = `guest${i}`;
-    input.placeholder = `Guest ${i} (FirstName LastName)`;
-    input.required = true;
-    container.appendChild(input);
-  }
-}
-
-function submitRSVP(guests) {
-  fetch("https://script.google.com/macros/s/AKfycbzGOFtjU43y1pfeYKTDtL3o9JxToWfFtQbEpO8C5-SWzl9fDOwLuifoSqs2CDBc1vkG/exec", {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      invitedGuest: selectedName,
-      attendance: attendance,
-      guestNumber: guestNumber,
-      guests: guests
-    })
-  })
-  .then(() => {
-    if (attendance === "Yes") {
-      document.getElementById("rsvpForm").style.display = "none";
-      document.getElementById("thankYou").style.display = "block";
-    } else {
-      document.getElementById("sorryScreen").style.display = "block";
-    }
-  })
-  .catch(err => console.error(err));
-}
-
-// Form submission with validation
-document.getElementById("rsvpForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  const guestInputs = document.querySelectorAll("#guestFields input");
-  const namePattern = /^[A-Za-z]+ [A-Za-z]+$/; // First Last format
-
-  for (let input of guestInputs) {
-    if (!namePattern.test(input.value.trim())) {
-      alert("Please enter names in the format: FirstName LastName (letters only).");
+    if (!query) {
+      suggestionBox.style.display = "none";
       return;
     }
+
+    const matches = Object.keys(inviteList).filter(name => name.includes(query));
+    if (matches.length === 0) {
+      suggestionBox.style.display = "none";
+      return;
+    }
+
+    suggestionBox.style.display = "block";
+    matches.forEach(match => {
+      const div = document.createElement("div");
+      div.classList.add("autocomplete-suggestion");
+      div.innerHTML = match.replace(new RegExp(query, "gi"), (m) => `<span class="highlight">${m}</span>`);
+      div.onclick = function() {
+        input.value = match;
+        suggestionBox.innerHTML = "";
+        suggestionBox.style.display = "none";
+      };
+      suggestionBox.appendChild(div);
+    });
+  });
+
+  function startRSVP(answer) {
+    attendance = answer ? "Yes" : "No";
+    document.getElementById("selectScreen").style.display = "none";
+
+    if (answer) {
+      document.getElementById("nameScreen").style.display = "block";
+    } else {
+      // Directly show sorry screen (no name / guest count needed)
+      document.getElementById("sorryScreen").style.display = "block";
+    }
   }
 
-  const guests = Array.from(guestInputs).map(i => i.value.trim()).filter(Boolean);
-  submitRSVP(guests);
-});
+  function checkName() {
+    selectedName = input.value.trim().toUpperCase();
+    if (inviteList[selectedName]) {
+      maxGuests = inviteList[selectedName];
+      document.getElementById("nameScreen").style.display = "none";
+      document.getElementById("seatScreen").style.display = "block";
+      document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
+      document.getElementById("seatCountInput").setAttribute("max", maxGuests);
+    } else {
+      alert("Name not found. Please enter your name exactly as on the invitation.");
+    }
+  }
+
+  function confirmSeats() {
+    const count = parseInt(document.getElementById("seatCountInput").value, 10);
+    if (isNaN(count) || count < 1 || count > maxGuests) {
+      alert(`Please enter a valid number between 1 and ${maxGuests}.`);
+      return;
+    }
+    guestNumber = count;
+    document.getElementById("seatScreen").style.display = "none";
+    document.getElementById("rsvpForm").style.display = "block";
+    createGuestFields(count);
+  }
+
+  function createGuestFields(n) {
+    const container = document.getElementById("guestFields");
+    container.innerHTML = "";
+    for (let i = 1; i <= n; i++) {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.name = `guest${i}`;
+      input.placeholder = `Guest ${i} (First Name Last Name)`;
+      input.required = true;
+      container.appendChild(input);
+    }
+  }
+
+  document.getElementById("rsvpForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const guestNames = [];
+    for (let i = 1; i <= guestNumber; i++) {
+      guestNames.push(this[`guest${i}`].value);
+    }
+
+    const payload = {
+      name: selectedName,
+      guestNumber: guestNumber,
+      guestNames: guestNames
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbwZoPyfPLT_WbETRA-tL8N3SZxEQXWz6CTrZDnxTmyqjNIKE3UB0TcW9qCEVigAN60f/exec", {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    // Show thank you screen
+    document.getElementById("rsvpForm").style.display = "none";
+    document.getElementById("thankYou").style.display = "block";
+  });
 </script>
 
 </body>
