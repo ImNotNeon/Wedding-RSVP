@@ -145,6 +145,11 @@
     <h4>We’ll celebrate with you in spirit 💕</h4>
   </div>
 
+  <div id="alreadyRSVP" class="screen">
+    <h2>We have already received your RSVP for this event!</h2>
+    <p>Please contact 0917-XXX-XXXX for any clarifications or changes.</p>
+  </div>
+
   <script>
   const inviteList = {
     "MARIBEL CHUA": 4,
@@ -203,16 +208,37 @@
     }
   }
 
-  function checkName() {
+  async function checkName() {
     selectedName = input.value.trim().toUpperCase();
-    if (inviteList[selectedName]) {
-      maxGuests = inviteList[selectedName];
-      document.getElementById("nameScreen").style.display = "none";
-      document.getElementById("seatScreen").style.display = "block";
-      document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
-      document.getElementById("seatCountInput").setAttribute("max", maxGuests);
-    } else {
+
+    if (!inviteList[selectedName]) {
       alert("Name not found. Please enter your name exactly as on the invitation.");
+      return;
+    }
+
+    try {
+      // Call Apps Script to verify if this name already RSVPed
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbwipz_9aAehESH6cOA8sZMFexZaOl9AlGxRPWi9uJ51vBkZGeVtvre4Bta4xVGuvByj/exec?checkName=" 
+        + encodeURIComponent(selectedName)
+      );
+      const data = await res.json();
+
+      if (data.exists) {
+        // Already RSVPed → show message
+        document.getElementById("nameScreen").style.display = "none";
+        document.getElementById("alreadyRSVP").style.display = "block";
+      } else {
+        // Not RSVPed yet → continue flow
+        maxGuests = inviteList[selectedName];
+        document.getElementById("nameScreen").style.display = "none";
+        document.getElementById("seatScreen").style.display = "block";
+        document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
+        document.getElementById("seatCountInput").setAttribute("max", maxGuests);
+      }
+    } catch (err) {
+      console.error("Error checking RSVP:", err);
+      alert("Something went wrong while checking your RSVP. Please contact 0917-XXX-XXXX.");
     }
   }
 
@@ -254,7 +280,7 @@
       guestNames: guestNames
     };
 
-    fetch("https://script.google.com/macros/s/AKfycbzrIX2MlnbSvi1RMBYS_sPMr-RPBKiktMixrRB0TZJSJ27tGvbuHB5AcNGi-UziSi9D/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbwipz_9aAehESH6cOA8sZMFexZaOl9AlGxRPWi9uJ51vBkZGeVtvre4Bta4xVGuvByj/exec", {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },
