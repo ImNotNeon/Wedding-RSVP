@@ -151,17 +151,25 @@
   </div>
 
   <script>
-  const inviteList = {
-    "MARIBEL CHUA": 4,
-    "ANDREW CO": 5,
-    "ELMER LIM": 3,
-    "STANLEY LIM": 5
-  };
-
+  let inviteList = {}; // will be filled from Google Sheet
   let maxGuests = 0;
   let selectedName = "";
   let guestNumber = 0;
   let attendance = "";
+
+  // Fetch invite list on load
+  async function loadInviteList() {
+    try {
+      const res = await fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec");
+      inviteList = await res.json();
+      console.log("Invite list loaded:", inviteList);
+    } catch (err) {
+      console.error("Error loading invite list:", err);
+      alert("Could not load invitation list. Please refresh.");
+    }
+  }
+
+  loadInviteList(); 
 
   // Autocomplete
   const input = document.getElementById("guestNameInput");
@@ -219,7 +227,7 @@
     try {
       // Call Apps Script to verify if this name already RSVPed
       const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbwipz_9aAehESH6cOA8sZMFexZaOl9AlGxRPWi9uJ51vBkZGeVtvre4Bta4xVGuvByj/exec?checkName=" 
+        "https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec?checkName=" 
         + encodeURIComponent(selectedName)
       );
       const data = await res.json();
@@ -280,7 +288,7 @@
       guestNames: guestNames
     };
 
-    fetch("https://script.google.com/macros/s/AKfycbwipz_9aAehESH6cOA8sZMFexZaOl9AlGxRPWi9uJ51vBkZGeVtvre4Bta4xVGuvByj/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec", {
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },
