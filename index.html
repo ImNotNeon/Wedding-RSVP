@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wedding RSVP</title>
 
-  <!-- Google Fonts WOW -->
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Tinos:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Tinos:wght@700&family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
-  <style>
+<style>
     body {
       font-family: 'Raleway', sans-serif;
       background: #c3bdb5 url('Wedding.gif') no-repeat center bottom fixed;
@@ -16,6 +15,72 @@
       text-align: center;
       padding: 30px;
       color: #4B2E2E;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* FADE TRANSITION */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .screen {
+      margin: 360px auto 20px auto;
+      max-width: 420px;
+      background: #d4d0c7;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.2);
+      display: none;
+      position: relative;
+      animation: fadeIn 0.8s ease forwards; /* Apply fade to all screens */
+    }
+
+    /* LOADING OVERLAY */
+    #loadingOverlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(195, 189, 181, 0.8);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #4B2E2E;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      margin-top: 15px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9em;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Rest of your existing styles... */
+    body {
+      font-family: 'Raleway', sans-serif;
+      background: #c3bdb5 url('Wedding.gif') no-repeat center bottom fixed;
+      background-size: cover;
+      text-align: center;
+      padding: 30px;
+      color: #4B2E2E;
+      overflow: hidden;
+      height: 100vh;
     }
     h1, h2 {
       font-family: 'Tinos', serif;
@@ -36,7 +101,7 @@
       color: #4B2E2E;
     }
     .screen {
-      margin: 20px auto;
+      margin: 360px auto 20px auto;
       max-width: 420px;
       background: #d4d0c7;
       padding: 20px;
@@ -45,6 +110,10 @@
       display: none;
       position: relative;
     }
+    .screen.transparent {
+      background: transparent;
+      box-shadow: none;
+    }
     input, button {
       width: 85%;
       padding: 10px;
@@ -52,6 +121,23 @@
       font-family: 'Raleway', sans-serif;
       border-radius: 6px;
       border: 1px solid #c9b6b3;
+    }
+    input[type="text"] {
+      border-radius: 50px;
+      background-color: #c4baa3;
+      border: none;
+      outline: none;
+      padding: 12px 20px;
+      color: #3e362b;
+    }
+    input[type="text"]::placeholder {
+      color: #3e362b;
+      opacity: 1;
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border: none;
+      box-shadow: none;
     }
     button {
       background: #b5aba4;
@@ -76,6 +162,7 @@
         max-height: 200px;
         overflow-y: auto;
         z-index: 1000;
+        display: none;
 
         min-width: 250px; 
         width: calc(100% - 40px); 
@@ -87,7 +174,7 @@
         background: #ffffff;
         padding: 10px;
         cursor: pointer;
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         font-size: 1em;
         color: #4B2E2E;
       }
@@ -99,210 +186,463 @@
       font-weight: bold;
       color: #4B2E2E;
     }
-  </style>
+    .attendance-text {
+      font-family: 'Montserrat', sans-serif;
+      margin-top: 20px;
+    }
+    .attendance-text-small {
+      font-size: 0.85em;
+      font-weight: 400;
+    }
+    .attendance-text-large {
+      font-size: 1.1em;
+      font-weight: 400;
+      margin-top: -10px;
+    }
+
+    /* Attendance Icons (Yes/No) */
+    .attendance-icon {
+      width: 60px;
+      height: 60px;
+      display: inline-block;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      opacity: 1 !important; /* Ensures no fading */
+    }
+
+    .attendance-icon:hover {
+      transform: scale(1.15); /* The "pop" effect */
+      opacity: 1 !important;
+    }
+
+    .attendance-icon:active {
+      transform: scale(0.95); /* Pressed effect */
+    }
+    .seat-question {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1em;
+      font-weight: 400;
+      margin-top: 15px;
+    }
+    input[type="number"] {
+      background-color: white;
+      border: 2px solid #3e362b;
+      border-radius: 8px;
+      padding: 12px 20px;
+      color: #3e362b;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1em;
+      width: 85%;
+      text-align: center;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      border: 2px solid #3e362b;
+    }
+    .button-image {
+      width: 60px;
+      height: 60px;
+      border: none;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      cursor: pointer;
+      /* Smooth transition for both opacity and the enlarge effect */
+      transition: transform 0.2s ease, opacity 0.3s ease, filter 0.2s ease;
+    }
+
+    .button-image:hover {
+      opacity: 1; /* Keep it fully visible */
+      background-color: transparent;
+      transform: scale(1.15); /* This makes it enlarge like the link icons */
+      filter: brightness(1.1); /* Optional: makes it slightly brighter on hover */
+    }
+    
+    /* Active state: slight shrink when clicked for a "button press" feel */
+    .button-image:active {
+      transform: scale(0.95);
+    }
+
+    /* 1. Move seatScreen up specifically */
+    #seatScreen {
+      margin-top: 350px; /* Reduced from 360px to move it up */
+    }
+
+    /* 2. Style the seatMessage to match the question */
+    #seatMessage {
+      font-family: 'Tinos', serif;
+      font-size: 1.1em; /* Matching the attendance-text-large size */
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    /* Style for the Confirm button in seatScreen */
+    #seatScreen button {
+      width: 40%;           /* Matches the width of the input box */
+      border-radius: 0px;   /* Makes corners sharp/square */
+      padding: 10px;
+      margin-top: 20px;
+      display: inline-block; /* Allows it to sit nicely or be centered */
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* 3. Adjust the number input width and corners */
+    input[type="number"] {
+      background-color: white;
+      border: 2px solid #3e362b;
+      border-radius: 0px; /* Removed rounded corners */
+      padding: 12px 10px;
+      color: #3e362b;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1em;
+      width: 40%; /* Reduced width */
+      text-align: center;
+      margin: 10px auto;
+      display: block; /* Ensures centering with margin auto */
+    }
+
+    /* New background class for the RSVP form stage */
+    #rsvpForm {
+      margin-top: 70px !important; /* Move only this screen up */
+      background: transparent;      /* Making it transparent like the others */
+      box-shadow: none;
+    }
+
+    /* Guest Input Box: White, Rounded Rectangle, Solid Shadow */
+    input.guest-input-box {
+      background-color: white !important;
+      border: 2px solid #3e362b !important;
+      border-radius: 12px !important; /* Rounded but rectangular */
+      box-shadow: 6px 6px 0px 0px #3e362b !important; /* Solid bottom-right shadow */
+      
+      /* Resetting previous styles */
+      padding: 12px 15px !important;
+      width: 85% !important;
+      margin: 10px auto 25px auto !important;
+      display: block;
+      color: #3e362b !important;
+      font-family: 'Montserrat', sans-serif !important;
+      outline: none !important;
+    }
+
+    /* Background for the RSVP stage */
+    body.plain-bg {
+      background: #c3bdb5 url('Plain.gif') no-repeat center bottom fixed !important;
+      background-size: cover !important;
+    }
+
+    /* Style the RSVP form title to use Tinos */
+    #rsvpForm h2 {
+      font-family: 'Tinos', serif;
+      font-size: 1.4em;
+      margin-bottom: 25px;
+      color: #3e362b;
+    }
+
+    /* Style for the alreadyRSVP screen specifically */
+    #alreadyRSVP {
+      font-family: 'Montserrat', sans-serif;
+      color: #3e362b;
+      margin-top: 360px; /* Keep it at the original height or adjust as needed */
+    }
+
+    #alreadyRSVP h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.3em;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #3e362b; /* Matching the brown tone */
+    }
+
+    #alreadyRSVP p {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1em;
+      font-weight: 400;
+    }
+
+    /* Sorry Screen Text Style */
+    #sorryScreen {
+      margin-top: 180px; /* Adjust height so it doesn't cover the GIF focus */
+    }
+
+    .cambria-text {
+      /* Font Stack: Cambria is first, then "Hoefler Text" (Mac), then standard serif */
+      font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;
+      font-size: 1em;
+      line-height: 1.6;
+      color: #3e362b;
+      max-width: 80%;
+      margin: 0 auto;
+    }
+
+    /* Countdown Screen Styling */
+    #thankYou {
+      margin-top: 350px !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    #timer {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      color: #3e362b;
+    }
+
+    .time-unit {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.8em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .time-unit span {
+      display: block;
+      font-size: 2.5em;
+      font-weight: 600;
+      font-family: 'Tinos', serif;
+    }
+
+    .links-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      color: #3e362b;
+    }
+
+    .icon-row {
+      display: flex;
+      justify-content: center;
+      gap: 35px;
+    }
+
+    .icon-link {
+      width: 60px;
+      height: 60px;
+      display: inline-block;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.2s ease;
+    }
+
+    .icon-link:hover {
+      transform: scale(1.1);
+    }
+
+    body.final-bg {
+      background: #c3bdb5 url('ThankYou.gif') no-repeat center bottom fixed !important;
+      background-size: cover !important;
+    }
+</style>
 </head>
 <body>
 
-  <h1>RSVP for Our Wedding 💍</h1>
-
-  <!-- Attendance question (FIRST) -->
-  <div id="selectScreen" class="screen" style="display:block;">
-    <p>Will you be attending our wedding? 💍</p>
-    <button onclick="startRSVP(true)">Yes</button>
-    <button onclick="startRSVP(false)">No</button>
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Searching...</div>
   </div>
 
-  <!-- Name input screen (SECOND) -->
-  <div id="nameScreen" class="screen">
-    <p>Please enter your full name</p>
-    <input type="text" id="guestNameInput" placeholder="Enter your name" autocomplete="off"/>
+  <div id="nameScreen" class="screen transparent" style="display:block;">
+    <input type="text" id="guestNameInput" placeholder="🔍︎" autocomplete="off"/>
     <div id="autocomplete-list" class="autocomplete-suggestions"></div>
-    <button onclick="checkName()">Continue</button>
+    <div class="attendance-text">
+      <p style="font-size: 0.85em;">Your presence would mean a lot to us,</p>
+      <p style="font-size: 1.1em; margin-top: -10px;">Will you make it to our special day?</p>
+    </div>
+    <div style="display: flex; gap: 70px; justify-content: center; margin-top: 15px;">
+      <a class="attendance-icon" onclick="checkName(true)" style="background-image: url('Yes.png');" role="button"></a>
+      <a class="attendance-icon" onclick="checkName(false)" style="background-image: url('No.png');" role="button"></a>
+    </div>
   </div>
 
-  <!-- Seat selection screen (THIRD) -->
-  <div id="seatScreen" class="screen">
-    <h2 id="seatMessage"></h2>
-    <p>How many seats will you be occupying?</p>
+  <div id="seatScreen" class="screen transparent">
+    <h4 id="seatMessage"></h4>
+    <p>How many are attending?</p>
     <input type="number" id="seatCountInput" min="1" />
     <button onclick="confirmSeats()">Confirm</button>
   </div>
 
-  <!-- RSVP form (FOURTH) -->
-  <form id="rsvpForm" class="screen">
-    <h2>Guest Names</h2>
+  <form id="rsvpForm" class="screen transparent">
+    <h2 style="font-size: 1.4em;">Please input name of attendees</h2>
     <div id="guestFields"></div>
-    <button type="submit">Submit RSVP</button>
+    <button type="submit" style="border-radius: 0; width: 30%; background-color: #3e362b; color: #e7e3dc;">RSVP</button>
   </form>
 
-  <!-- Thank you / decline (FINAL) -->
   <div id="thankYou" class="screen">
-    <h3>Thank you! Your RSVP has been submitted.</h3>
-    <h3>Your presence will make our day even more special! 🎉</h3>
-  </div>
-  <div id="sorryScreen" class="screen">
-    <h4>Thank you for letting us know 💌</h4>
-    <h4>We’ll celebrate with you in spirit 💕</h4>
+    <div id="timer">
+      <div class="time-unit"><span id="days">00</span>Days</div>
+      <div class="time-unit"><span id="hours">00</span>Hrs</div>
+      <div class="time-unit"><span id="minutes">00</span>Mins</div>
+      <div class="time-unit"><span id="seconds">00</span>Secs</div>
+    </div>
+    <p>Links that may help you</p>
+    <div class="icon-row">
+      <a href="#" class="icon-link" style="background-image: url('Church.png');"></a>
+      <a href="#" class="icon-link" style="background-image: url('Reception.png');"></a>
+      <a href="#" class="icon-link" style="background-image: url('Email.png');"></a>
+    </div>
   </div>
 
-  <!-- Already RSVPED -->
-  <div id="alreadyRSVP" class="screen">
+  <div id="sorryScreen" class="screen transparent">
+    <p class="cambria-text">
+      While we’re sad you can’t be with us in person, <br>
+      we are deeply thankful for your love and support. <br><br>
+      Your presence in our lives is a gift <br>
+      and we look forward to celebrating life’s moments together in the future.
+    </p>
+  </div>
+
+  <div id="alreadyRSVP" class="screen transparent">
     <h2>We have already received your RSVP for this event!</h2>
     <p>Please contact 0917-XXX-XXXX for any clarifications or changes.</p>
   </div>
 
-  <script>
-  let inviteList = {}; // will be filled from Google Sheet
+<script>
+  let inviteList = {};
   let maxGuests = 0;
   let selectedName = "";
   let guestNumber = 0;
-  let attendance = "";
 
-  // Fetch invite list on load
+  // HELPER: Show Screen with Fade
+  function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    const next = document.getElementById(screenId);
+    next.style.display = 'block';
+  }
+
+  // HELPER: Toggle Loading
+  function toggleLoading(show, text = "Searching...") {
+    const loader = document.getElementById('loadingOverlay');
+    loader.querySelector('.loading-text').innerText = text;
+    loader.style.display = show ? 'flex' : 'none';
+  }
+
   async function loadInviteList() {
     try {
       const res = await fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec");
       inviteList = await res.json();
-      console.log("Invite list loaded:", inviteList);
-    } catch (err) {
-      console.error("Error loading invite list:", err);
-      alert("Could not load invitation list. Please refresh.");
-    }
+    } catch (err) { console.error(err); }
   }
+  loadInviteList();
 
-  loadInviteList(); 
-
-  // Autocomplete
+  // Autocomplete logic (same as yours)
   const input = document.getElementById("guestNameInput");
   const suggestionBox = document.getElementById("autocomplete-list");
-
   input.addEventListener("input", function() {
     const query = this.value.toUpperCase();
     suggestionBox.innerHTML = "";
-
-    if (!query) {
-      suggestionBox.style.display = "none";
-      return;
-    }
-
+    if (!query) { suggestionBox.style.display = "none"; return; }
     const matches = Object.keys(inviteList).filter(name => name.includes(query));
-    if (matches.length === 0) {
-      suggestionBox.style.display = "none";
-      return;
-    }
-
+    if (matches.length === 0) { suggestionBox.style.display = "none"; return; }
     suggestionBox.style.display = "block";
     matches.forEach(match => {
       const div = document.createElement("div");
-      div.classList.add("autocomplete-suggestion");
-      div.innerHTML = match.replace(new RegExp(query, "gi"), (m) => `<span class="highlight">${m}</span>`);
-      div.onclick = function() {
-        input.value = match;
-        suggestionBox.innerHTML = "";
-        suggestionBox.style.display = "none";
-      };
+      div.innerText = match;
+      div.onclick = () => { input.value = match; suggestionBox.style.display = "none"; };
       suggestionBox.appendChild(div);
     });
   });
 
-  function startRSVP(answer) {
-    attendance = answer ? "Yes" : "No";
-    document.getElementById("selectScreen").style.display = "none";
-
-    if (answer) {
-      document.getElementById("nameScreen").style.display = "block";
-    } else {
-      // Directly show sorry screen (no name / guest count needed)
-      document.getElementById("sorryScreen").style.display = "block";
+  async function checkName(isAttending) {
+    if (!isAttending) {
+      document.body.classList.add("plain-bg");
+      showScreen("sorryScreen");
+      return;
     }
-  }
-
-  async function checkName() {
+    
     selectedName = input.value.trim().toUpperCase();
-
     if (!inviteList[selectedName]) {
-      alert("Name not found. Please enter your name exactly as on the invitation.");
+      alert("Name not found.");
       return;
     }
 
+    toggleLoading(true, "Verifying Name..."); // START LOADING
+
     try {
-      // Call Apps Script to verify if this name already RSVPed
-      const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec?checkName=" 
-        + encodeURIComponent(selectedName)
-      );
+      const res = await fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec?checkName=" + encodeURIComponent(selectedName));
       const data = await res.json();
+      
+      toggleLoading(false); // STOP LOADING
 
       if (data.exists) {
-        // Already RSVPed → show message
-        document.getElementById("nameScreen").style.display = "none";
-        document.getElementById("alreadyRSVP").style.display = "block";
+        showScreen("alreadyRSVP");
       } else {
-        // Not RSVPed yet → continue flow
         maxGuests = inviteList[selectedName];
-        document.getElementById("nameScreen").style.display = "none";
-        document.getElementById("seatScreen").style.display = "block";
         document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
-        document.getElementById("seatCountInput").setAttribute("max", maxGuests);
+        document.getElementById("seatCountInput").max = maxGuests;
+        showScreen("seatScreen");
       }
     } catch (err) {
-      console.error("Error checking RSVP:", err);
-      alert("Something went wrong while checking your RSVP. Please contact 0917-XXX-XXXX.");
+      toggleLoading(false);
+      alert("Error connecting to server.");
     }
   }
 
   function confirmSeats() {
     const count = parseInt(document.getElementById("seatCountInput").value, 10);
     if (isNaN(count) || count < 1 || count > maxGuests) {
-      alert(`Please enter a valid number between 1 and ${maxGuests}.`);
+      alert(`Enter 1-${maxGuests}`);
       return;
     }
     guestNumber = count;
-    document.getElementById("seatScreen").style.display = "none";
-    document.getElementById("rsvpForm").style.display = "block";
-    createGuestFields(count);
+    toggleLoading(true, "Preparing Form...");
+    
+    setTimeout(() => { // Small delay to show transition
+      toggleLoading(false);
+      document.body.classList.add("plain-bg");
+      createGuestFields(count);
+      showScreen("rsvpForm");
+    }, 800);
   }
 
   function createGuestFields(n) {
     const container = document.getElementById("guestFields");
     container.innerHTML = "";
     for (let i = 1; i <= n; i++) {
-      const input = document.createElement("input");
-      input.type = "text";
-      input.name = `guest${i}`;
-      input.placeholder = `Guest ${i} (First Name Last Name)`;
-      input.required = true;
-      container.appendChild(input);
+      const inp = document.createElement("input");
+      inp.type = "text"; inp.name = `guest${i}`; inp.placeholder = `Guest ${i} Name`;
+      inp.required = true; inp.classList.add("guest-input-box");
+      container.appendChild(inp);
     }
   }
 
-  document.getElementById("rsvpForm").addEventListener("submit", function(e) {
+  document.getElementById("rsvpForm").addEventListener("submit", async function(e) {
     e.preventDefault();
+    toggleLoading(true, "Submitting RSVP...");
+
     const guestNames = [];
-    for (let i = 1; i <= guestNumber; i++) {
-      guestNames.push(this[`guest${i}`].value);
-    }
+    for (let i = 1; i <= guestNumber; i++) { guestNames.push(this[`guest${i}`].value); }
 
-    const payload = {
-      name: selectedName,
-      guestNumber: guestNumber,
-      guestNames: guestNames
-    };
-
-    fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    await fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec", {
+      method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber, guestNames })
     });
 
-    // Show thank you screen
-    document.getElementById("rsvpForm").style.display = "none";
-    document.getElementById("thankYou").style.display = "block";
+    setTimeout(() => {
+      toggleLoading(false);
+      document.body.className = "final-bg";
+      showScreen("thankYou");
+    }, 1500);
   });
-  
-</script>
 
+  function startCountdown() {
+    const targetDate = new Date("October 10, 2026 00:00:00").getTime();
+    setInterval(() => {
+      const distance = targetDate - new Date().getTime();
+      document.getElementById("days").innerText = Math.floor(distance / 86400000);
+      document.getElementById("hours").innerText = Math.floor((distance % 86400000) / 3600000);
+      document.getElementById("minutes").innerText = Math.floor((distance % 3600000) / 60000);
+      document.getElementById("seconds").innerText = Math.floor((distance % 60000) / 1000);
+    }, 1000);
+  }
+  startCountdown();
+</script>
 </body>
 </html>
-
