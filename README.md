@@ -27,7 +27,6 @@ The application follows a lightweight web-based structure:
 - **Backend (Google Apps Script):** Processes form input, validates guest data, and updates records  
 - **Database (Google Sheets):** Stores guest list, confirmation status, and attendance records  
 
-This architecture ensures accessibility, scalability, and minimal infrastructure requirements.
 
 ---
 
