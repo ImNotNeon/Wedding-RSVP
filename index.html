@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wedding RSVP</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;600&family=Tinos:wght@700&family=Montserrat:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght=400;600&family=Tinos:wght=700&family=Montserrat:wght=400;500;600&family=Playfair+Display:wght=600&display=swap" rel="stylesheet">
 
 <style>
     body {
@@ -22,7 +22,7 @@
       box-sizing: border-box;
     }
 
-    /* LOGO CONTAINER YES WOW*/
+    /* LOGO CONTAINER */
     .logo-container {
       width: 100%;
       display: block;
@@ -35,9 +35,9 @@
       height: auto;
     }
 
-    /* ALL SCREENS: Forced to 20px below whatever is above them */
+    /* ALL SCREENS: Forced to consistency spacing grid */
     .screen {
-      margin: 15px auto !important; /* This creates the 20px gap from the logo */
+      margin: 25px auto !important;
       max-width: 420px;
       background: #d4d0c7;
       padding: 20px;
@@ -48,18 +48,9 @@
       animation: fadeIn 0.8s ease forwards;
     }
 
-    /* Keeping your specific screen overrides but ensuring the 20px gap */
-    #nameScreen, #seatScreen, #alreadyRSVP {
-      margin-top: 20px !important;
-    }
-
-    #thankYou {
-      margin-top: 20px !important;
+    .screen.transparent {
       background: transparent !important;
       box-shadow: none !important;
-      width: 100%;
-      max-width: 600px;
-      padding-bottom: 50px;
     }
 
     /* FADE TRANSITION */
@@ -67,8 +58,6 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Rest of your existing styles (Loading, Inputs, Buttons, etc.) remain exactly as you wrote them */
 
     #loadingOverlay {
       position: fixed;
@@ -103,17 +92,6 @@
       text-transform: uppercase;
     }
 
-    /* Rest of your existing styles... */
-    body {
-      font-family: 'Raleway', sans-serif;
-      background: #c3bdb5 url('Wedding.gif') no-repeat center bottom fixed;
-      background-size: cover;
-      text-align: center;
-      padding: 30px;
-      color: #4B2E2E;
-      overflow: hidden;
-      height: 100vh;
-    }
     h1, h2 {
       font-family: 'Tinos', serif;
       font-weight: 700;
@@ -132,20 +110,7 @@
       font-size: 1.5em;
       color: #4B2E2E;
     }
-    .screen {
-      margin: 360px auto 20px auto;
-      max-width: 420px;
-      background: #d4d0c7;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.2);
-      display: none;
-      position: relative;
-    }
-    .screen.transparent {
-      background: transparent;
-      box-shadow: none;
-    }
+
     input, button {
       width: 85%;
       padding: 10px;
@@ -167,11 +132,6 @@
       color: #3e362b;
       opacity: 1;
     }
-    input[type="text"]:focus {
-      outline: none;
-      border: none;
-      box-shadow: none;
-    }
     button {
       background: #b5aba4;
       color: white;
@@ -183,7 +143,6 @@
     button:hover {
       background: #c9b6b3;
     }
-    #thankYou, #sorryMessage { display: none; }
 
     /* Autocomplete dropdown */
     .autocomplete-suggestions {
@@ -191,7 +150,7 @@
         background: #ffffff;
         border: 1px solid #ccc;
         border-radius: 12px;
-        box-shadow: 0 -4px 12px rgba(0,0,0,0.15); /* Shadow shifted to top */
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
         max-height: 160px;
         overflow-y: auto;
         z-index: 9999;
@@ -199,40 +158,27 @@
         width: 85%;
         left: 50%;
         transform: translateX(-50%);
-        bottom: 210px; /* Fixed: This forces it to appear ABOVE the input box */
+        bottom: 210px; /* Forces it to appear ABOVE the input box */
     }
 
-      .autocomplete-suggestions div {
-        background: #ffffff;
-        padding: 10px;
-        cursor: pointer;
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1em;
-        color: #4B2E2E;
-      }
-
-      .autocomplete-suggestions div:hover {
-        background: #f2f2f2;
-      }
-    .highlight {
-      font-weight: bold;
+    .autocomplete-suggestions div {
+      background: #ffffff;
+      padding: 10px;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1em;
       color: #4B2E2E;
     }
+
+    .autocomplete-suggestions div:hover {
+      background: #f2f2f2;
+    }
+
     .attendance-text {
       font-family: 'Montserrat', sans-serif;
       margin-top: 20px;
     }
-    .attendance-text-small {
-      font-size: 0.85em;
-      font-weight: 400;
-    }
-    .attendance-text-large {
-      font-size: 1.1em;
-      font-weight: 400;
-      margin-top: -10px;
-    }
 
-    /* Attendance Icons (Yes/No) */
     .attendance-icon {
       width: 60px;
       height: 60px;
@@ -242,125 +188,60 @@
       background-repeat: no-repeat;
       cursor: pointer;
       transition: transform 0.2s ease;
-      opacity: 1 !important; /* Ensures no fading */
-    }
-
-    .attendance-icon:hover {
-      transform: scale(1.15); /* The "pop" effect */
       opacity: 1 !important;
     }
 
-    .attendance-icon:active {
-      transform: scale(0.95); /* Pressed effect */
-    }
-    .seat-question {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1em;
-      font-weight: 400;
-      margin-top: 15px;
-    }
-    input[type="number"] {
-      background-color: white;
-      border: 2px solid #3e362b;
-      border-radius: 8px;
-      padding: 12px 20px;
-      color: #3e362b;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1em;
-      width: 85%;
-      text-align: center;
-    }
-    input[type="number"]:focus {
-      outline: none;
-      border: 2px solid #3e362b;
-    }
-    .button-image {
-      width: 60px;
-      height: 60px;
-      border: none;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-color: transparent;
-      cursor: pointer;
-      /* Smooth transition for both opacity and the enlarge effect */
-      transition: transform 0.2s ease, opacity 0.3s ease, filter 0.2s ease;
+    .attendance-icon:hover {
+      transform: scale(1.15);
     }
 
-    .button-image:hover {
-      opacity: 1; /* Keep it fully visible */
-      background-color: transparent;
-      transform: scale(1.15); /* This makes it enlarge like the link icons */
-      filter: brightness(1.1); /* Optional: makes it slightly brighter on hover */
-    }
-    
-    /* Active state: slight shrink when clicked for a "button press" feel */
-    .button-image:active {
-      transform: scale(0.95);
-    }
-
-    /* 1. Move seatScreen up specifically */
-    #seatScreen {
-      margin-top: 350px; /* Reduced from 360px to move it up */
-    }
-
-    /* 2. Style the seatMessage to match the question */
     #seatMessage {
       font-family: 'Tinos', serif;
-      font-size: 1.1em; /* Matching the attendance-text-large size */
+      font-size: 1.1em;
       font-weight: 700;
       margin-bottom: 5px;
     }
 
-    /* Style for the Confirm button in seatScreen */
     #seatScreen button {
-      width: 40%;           /* Matches the width of the input box */
-      border-radius: 0px;   /* Makes corners sharp/square */
+      width: 40%;
+      border-radius: 0px;
       padding: 10px;
       margin-top: 20px;
-      display: inline-block; /* Allows it to sit nicely or be centered */
+      display: inline-block;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    /* 3. Adjust the number input width and corners */
     input[type="number"] {
       background-color: white;
       border: 2px solid #3e362b;
-      border-radius: 0px; /* Removed rounded corners */
+      border-radius: 0px;
       padding: 12px 10px;
       color: #3e362b;
       font-family: 'Montserrat', sans-serif;
       font-size: 1em;
-      width: 40%; /* Reduced width */
+      width: 40%;
       text-align: center;
       margin: 10px auto;
-      display: block; /* Ensures centering with margin auto */
+      display: block;
     }
 
     #rsvpForm {
       margin-top: 5px !important; 
-      background: transparent;
-      box-shadow: none;
-      /* Prevent the form from going off-screen on small phones */
       max-height: 60vh; 
       overflow-y: auto;
-      padding-bottom: 50px; /* Space for the button at the bottom */
+      padding-bottom: 50px;
     }
     
-    /* Optional: Hide scrollbar for a cleaner look */
     #rsvpForm::-webkit-scrollbar {
       display: none;
     }
 
-    /* Guest Input Box: White, Rounded Rectangle, Solid Shadow */
     input.guest-input-box {
       background-color: white !important;
       border: 2px solid #3e362b !important;
-      border-radius: 12px !important; /* Rounded but rectangular */
-      box-shadow: 6px 6px 0px 0px #3e362b !important; /* Solid bottom-right shadow */
-      
-      /* Resetting previous styles */
+      border-radius: 12px !important;
+      box-shadow: 6px 6px 0px 0px #3e362b !important;
       padding: 12px 15px !important;
       width: 85% !important;
       margin: 10px auto 25px auto !important;
@@ -370,7 +251,6 @@
       outline: none !important;
     }
 
-    /* Style the RSVP form title to use Tinos */
     #rsvpForm h2 {
       font-family: 'Tinos', serif;
       font-size: 1.4em;
@@ -378,34 +258,7 @@
       color: #3e362b;
     }
 
-    /* Style for the alreadyRSVP screen specifically */
-    #alreadyRSVP {
-      font-family: 'Montserrat', sans-serif;
-      color: #3e362b;
-      margin-top: 360px; /* Keep it at the original height or adjust as needed */
-    }
-
-    #alreadyRSVP h2 {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1.3em;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #3e362b; /* Matching the brown tone */
-    }
-
-    #alreadyRSVP p {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 1em;
-      font-weight: 400;
-    }
-
-    /* Sorry Screen Text Style */
-    #sorryScreen {
-      margin-top: 360px; /* Adjust height so it doesn't cover the GIF focus */
-    }
-
     .cambria-text {
-      /* Font Stack: Cambria is first, then "Hoefler Text" (Mac), then standard serif */
       font-family: Cambria, "Hoefler Text", "Liberation Serif", Times, "Times New Roman", serif;
       font-size: 1em;
       line-height: 1.6;
@@ -414,21 +267,12 @@
       margin: 0 auto;
     }
 
-    /* Countdown Screen Styling */
-    #thankYou {
-      margin-top: 20px !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      width: 100%;
-      max-width: 600px;
-    }
-
-#timer {
+    #timer {
       display: flex;
-      flex-wrap: nowrap; /* Keep on one row */
-      justify-content: center; /* Center horizontally */
+      flex-wrap: nowrap;
+      justify-content: center;
       align-items: center;
-      gap: 15px; /* Spacing between units */
+      gap: 15px;
       margin: 20px auto;
       width: 100%;
     }
@@ -445,13 +289,6 @@
       font-size: 2.5em;
       font-weight: 600;
       font-family: 'Tinos', serif;
-    }
-
-    .links-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2em;
-      margin-bottom: 20px;
-      color: #3e362b;
     }
 
     .icon-row {
@@ -473,6 +310,18 @@
       transform: scale(1.1);
     }
 
+    /* Style for modern decision buttons inside the Edit Screen */
+    .decision-btn {
+      width: 85%;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 12px;
+      margin: 10px auto;
+      display: block;
+    }
+    .decision-btn.primary {
+      background-color: #3e362b;
+    }
 </style>
 </head>
 <body>
@@ -489,7 +338,7 @@
   <div id="nameScreen" class="screen transparent" style="display:block;">
     <input type="text" id="guestNameInput" placeholder="🔍︎ ENTER NAME" autocomplete="off"/>
     <div id="autocomplete-list" class="autocomplete-suggestions"></div>
-    <div class="attendance-text" style="margin-top:20px; font-family: Montserrat;">
+    <div class="attendance-text">
       <p style="font-size: 0.85em;">Your presence would mean a lot to us,</p>
       <p style="font-size: 1.1em; margin-top: -10px;">Will you make it to our special day?</p>
     </div>
@@ -499,15 +348,22 @@
     </div>
   </div>
 
+  <div id="editPromptScreen" class="screen transparent">
+    <h2 style="font-size: 1.4em; font-family: Montserrat;">RSVP Found!</h2>
+    <p style="font-family: Montserrat; margin-bottom: 20px;">We have already received an RSVP for this name. Would you like to edit your response?</p>
+    <button class="decision-btn primary" onclick="proceedToEdit()">Yes, Edit My RSVP</button>
+    <button class="decision-btn" onclick="showScreen('nameScreen')">Go Back</button>
+  </div>
+
   <div id="seatScreen" class="screen transparent">
-    <h4 id="seatMessage" style="font-family: Tinos; font-weight:700;"></h4>
+    <h4 id="seatMessage"></h4>
     <p style="font-family: Montserrat;">How many are attending?</p>
-    <input type="number" id="seatCountInput" min="1" style="width:40%; border-radius:0; border: 2px solid #3e362b; padding:10px; margin: 10px auto; display:block;"/>
-    <button onclick="confirmSeats()" style="width:40%; border-radius:0; padding:10px; background:#b5aba4; color:white; font-weight:600; cursor:pointer;">CONFIRM</button>
+    <input type="number" id="seatCountInput" min="1" value="1"/>
+    <button onclick="confirmSeats()">CONFIRM</button>
   </div>
 
   <form id="rsvpForm" class="screen transparent">
-    <h2 style="font-size: 1.4em;">Please input name of attendees</h2>
+    <h2>Please input name of attendees</h2>
     <div id="guestFields"></div>
     <button type="submit" style="width: 30%; background-color: #3e362b; color: #e7e3dc; padding:10px; border:none; cursor:pointer; font-weight:600;">RSVP</button>
   </form>
@@ -521,12 +377,7 @@
     </p>
   </div>
 
-  <div id="alreadyRSVP" class="screen transparent">
-    <h2 style="font-size: 1.3em; font-family: Montserrat;">Already Received!</h2>
-    <p style="font-family: Montserrat;">Please contact 0917-XXX-XXXX for changes.</p>
-  </div>
-
-<div id="thankYou" class="screen transparent">
+  <div id="thankYou" class="screen transparent">
     <div id="timer">
       <div class="time-unit"><span id="days">00</span>Days</div>
       <div class="time-unit"><span id="hours">00</span>Hrs</div>
@@ -542,28 +393,26 @@
   </div>
 
 <script>
-  /* All JS logic remains unchanged */
   let inviteList = {};
   let maxGuests = 0;
   let selectedName = "";
   let guestNumber = 0;
+  let prefilledGuestNames = []; // Global holder to store existing names if editing
+
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxrINHyCMIevc39vZodDSWl7mT87P-zVsbZC4WltktI1yWd_OMfKB6n7nyAifh83RyE/exec";
 
   function showScreen(screenId) {
-    // 1. Hide all screens and show the target one
     document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
     document.getElementById(screenId).style.display = 'block';
 
-    // 2. Logic to swap the logo based on the screen
     const logoImg = document.getElementById('eventLogo');
-    
-    if (screenId === 'rsvpForm' || screenId === 'sorryScreen') {
+    if (screenId === 'rsvpForm' || screenId === 'sorryScreen' || screenId === 'editPromptScreen') {
       logoImg.src = 'Logo.png';
     } else if (screenId === 'thankYou') {
       logoImg.src = 'TY.png';
     } else {
-      logoImg.src = 'Main.png'; // Default for nameScreen, seatScreen, etc.
+      logoImg.src = 'Main.png';
     }
-
     window.scrollTo(0,0);
   }
 
@@ -575,7 +424,7 @@
 
   async function loadInviteList() {
     try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec");
+      const res = await fetch(WEB_APP_URL);
       inviteList = await res.json();
     } catch (err) { console.error(err); }
   }
@@ -599,33 +448,51 @@
   });
 
   async function checkName(isAttending) {
-    if (!isAttending) {
-      toggleLoading(true, "Sending Regrets...");
-      setTimeout(() => { toggleLoading(false); showScreen("sorryScreen"); }, 1000);
-      return;
-    }
-    
     selectedName = input.value.trim().toUpperCase();
-    if (!inviteList[selectedName]) {
+    if (!selectedName || !inviteList[selectedName]) {
       alert("Name not found. Please enter name exactly as on invitation.");
       return;
     }
 
+    if (!isAttending) {
+      toggleLoading(true, "Sending Regrets...");
+      // For regrets, we can post directly as 0 guests
+      try {
+        await fetch(WEB_APP_URL, {
+          method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber: 0, guestNames: ["DECLINED RSVP"] })
+        });
+        setTimeout(() => { toggleLoading(false); showScreen("sorryScreen"); }, 1000);
+      } catch(e) { toggleLoading(false); showScreen("sorryScreen"); }
+      return;
+    }
+    
     toggleLoading(true, "Verifying Name...");
     try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec?checkName=" + encodeURIComponent(selectedName));
+      const res = await fetch(WEB_APP_URL + "?checkName=" + encodeURIComponent(selectedName));
       const data = await res.json();
       toggleLoading(false);
 
+      maxGuests = inviteList[selectedName];
+      
       if (data.exists) {
-        showScreen("alreadyRSVP");
+        // Save old tracking info if they choose to override it later
+        prefilledGuestNames = data.previousData ? data.previousData.guestNames : [];
+        document.getElementById("seatCountInput").value = data.previousData ? data.previousData.guestNumber : 1;
+        showScreen("editPromptScreen");
       } else {
-        maxGuests = inviteList[selectedName];
+        prefilledGuestNames = [];
+        document.getElementById("seatCountInput").value = 1;
         document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
         document.getElementById("seatCountInput").max = maxGuests;
         showScreen("seatScreen");
       }
-    } catch (err) { toggleLoading(false); alert("Error connecting."); }
+    } catch (err) { toggleLoading(false); alert("Error connecting to server."); }
+  }
+
+  function proceedToEdit() {
+    document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
+    document.getElementById("seatCountInput").max = maxGuests;
+    showScreen("seatScreen");
   }
 
   function confirmSeats() {
@@ -648,8 +515,20 @@
     container.innerHTML = "";
     for (let i = 1; i <= n; i++) {
       const inp = document.createElement("input");
-      inp.type = "text"; inp.name = `guest${i}`; inp.placeholder = `Guest ${i} Name`;
-      inp.required = true; inp.classList.add("guest-input-box");
+      inp.type = "text"; 
+      inp.name = `guest${i}`; 
+      inp.placeholder = `Guest ${i} Name`;
+      inp.required = true; 
+      inp.classList.add("guest-input-box");
+      
+      // If we have previous history data available for this index array, pre-populate it!
+      if (prefilledGuestNames[i - 1]) {
+        inp.value = prefilledGuestNames[i - 1];
+      } else if (i === 1 && prefilledGuestNames.length === 0) {
+        // Default the first field to the main user's searched name for convenience
+        inp.value = selectedName;
+      }
+      
       container.appendChild(inp);
     }
   }
@@ -660,9 +539,11 @@
     const guestNames = [];
     for (let i = 1; i <= guestNumber; i++) { guestNames.push(this[`guest${i}`].value); }
 
-    await fetch("https://script.google.com/macros/s/AKfycbz_0Nc6tslk3AFka2Za9gdtpy63ucQeCNS_ETQebsL-ecSA86AH6r4RCDnUzW1uq4UF/exec", {
-      method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber, guestNames })
-    });
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber, guestNames })
+      });
+    } catch(err) { console.error(err); }
 
     setTimeout(() => {
       toggleLoading(false);
