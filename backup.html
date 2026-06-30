@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding RSVP</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght=400;600&family=Tinos:wght=700&family=Montserrat:wght=400;500;600&family=Playfair+Display:wght=600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <div class="logo-container">
+    <div class="logo-upper">
+      <img src="RSVP-Chi-Logo.png" id="chiLogo" class="chi-logo">
+    </div>
+    <div class="logo-under">
+      <img src="RSVP-AK-Logo.png" id="eventLogo" alt="Wedding Logo" class="main-logo">
+    </div>
+  </div>
+
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Searching...</div>
+  </div>
+
+  <div id="nameScreen" class="screen transparent" style="display:block;">
+    <input type="text" id="guestNameInput" placeholder="🔍︎ ENTER NAME" autocomplete="off"/>
+    <div id="autocomplete-list" class="autocomplete-suggestions"></div>
+    <div class="attendance-text">
+      <p style="font-size: 0.85em;">Your presence would mean a lot to us,</p>
+      <p style="font-size: 1.1em; margin-top: -10px;">Will you make it to our special day?</p>
+    </div>
+    <div style="display: flex; gap: 70px; justify-content: center; margin-top: 15px;">
+      <a class="attendance-icon" onclick="checkName(true)" style="background-image: url('Yes.png');" role="button"></a>
+      <a class="attendance-icon" onclick="checkName(false)" style="background-image: url('No.png');" role="button"></a>
+    </div>
+  </div>
+
+  <div id="editPromptScreen" class="screen transparent">
+    <h2 style="font-size: 1.4em; font-family: Montserrat;">RSVP Found!</h2>
+    <p style="font-family: Montserrat; margin-bottom: 20px;">We have already received an RSVP for this name. Would you like to edit your response?</p>
+    <button class="decision-btn primary" onclick="proceedToEdit()">Yes, Edit My RSVP</button>
+    <button class="decision-btn" onclick="showScreen('nameScreen')">Go Back</button>
+  </div>
+
+  <div id="seatScreen" class="screen transparent">
+    <h4 id="seatMessage"></h4>
+    <p style="font-family: Montserrat;">How many are attending?</p>
+    <input type="number" id="seatCountInput" min="1" value="1"/>
+    <button onclick="confirmSeats()">CONFIRM</button>
+  </div>
+
+  <form id="rsvpForm" class="screen transparent">
+    <h2>Please input name of attendees</h2>
+    <div id="guestFields"></div>
+    <button type="submit" style="width: 30%; background-color: #3e362b; color: #e7e3dc; padding:10px; border:none; cursor:pointer; font-weight:600;">RSVP</button>
+  </form>
+
+  <div id="sorryScreen" class="screen transparent">
+    <p class="cambria-text">
+      While we're sad you can't be with us in person, <br>
+      we are deeply thankful for your love and support. <br><br>
+      Your presence in our lives is a gift <br>
+      and we look forward to celebrating life's moments together in the future.
+    </p>
+  </div>
+
+  <div id="thankYou" class="screen transparent">
+    <div id="timer">
+      <div class="time-unit"><span id="days">00</span>Days</div>
+      <div class="time-unit"><span id="hours">00</span>Hrs</div>
+      <div class="time-unit"><span id="minutes">00</span>Mins</div>
+      <div class="time-unit"><span id="seconds">00</span>Secs</div>
+    </div>
+    <p style="font-family: Playfair Display; font-size: 1.2em;">Links that may help you</p>
+    <div class="icon-row">
+      <a href="https://maps.app.goo.gl/gHSZ2TiaBB8LUH3M7" target="_blank" rel="noopener noreferrer" class="icon-link" style="background-image: url('Church.png');"></a>
+      <a href="https://maps.app.goo.gl/47ME3Vhk4NBPv9pQA" target="_blank" rel="noopener noreferrer" class="icon-link" style="background-image: url('Reception.png');"></a>
+      <a href="mailto:yourweddingemail@example.com" target="_blank" rel="noopener noreferrer" class="icon-link" style="background-image: url('Email.png');"></a>
+    </div>
+  </div>
+
+<script>
+  let inviteList = {};
+  let maxGuests = 0;
+  let selectedName = "";
+  let guestNumber = 0;
+  let prefilledGuestNames = []; // Global holder to store existing names if editing
+
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbygMtfWeCofI3_cOACjqqon2H8-0R4WQwa4VWVJXFcqT-fvRjFHxJ7yKbfLi5RnAZwC/exec";
+
+  function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    document.getElementById(screenId).style.display = 'block';
+
+    const logoImg = document.getElementById('eventLogo');
+    if (screenId === 'rsvpForm' || screenId === 'sorryScreen' || screenId === 'editPromptScreen') {
+      logoImg.src = 'Logo.png';
+    } else if (screenId === 'thankYou') {
+      logoImg.src = 'TY.png';
+    } else {
+      logoImg.src = 'Main.png';
+    }
+    window.scrollTo(0,0);
+  }
+
+  function toggleLoading(show, text = "Searching...") {
+    const loader = document.getElementById('loadingOverlay');
+    loader.querySelector('.loading-text').innerText = text;
+    loader.style.display = show ? 'flex' : 'none';
+  }
+
+  async function loadInviteList() {
+    try {
+      const res = await fetch(WEB_APP_URL);
+      inviteList = await res.json();
+    } catch (err) { console.error(err); }
+  }
+  loadInviteList();
+
+  const input = document.getElementById("guestNameInput");
+  const suggestionBox = document.getElementById("autocomplete-list");
+  input.addEventListener("input", function() {
+    const query = this.value.toUpperCase();
+    suggestionBox.innerHTML = "";
+    if (!query) { suggestionBox.style.display = "none"; return; }
+    const matches = Object.keys(inviteList).filter(name => name.includes(query));
+    if (matches.length === 0) { suggestionBox.style.display = "none"; return; }
+    suggestionBox.style.display = "block";
+    matches.forEach(match => {
+      const div = document.createElement("div");
+      div.innerText = match;
+      div.onclick = () => { input.value = match; suggestionBox.style.display = "none"; };
+      suggestionBox.appendChild(div);
+    });
+  });
+
+  async function checkName(isAttending) {
+    selectedName = input.value.trim().toUpperCase();
+    if (!selectedName || !inviteList[selectedName]) {
+      alert("Name not found. Please enter name exactly as on invitation.");
+      return;
+    }
+
+    if (!isAttending) {
+      toggleLoading(true, "Sending Regrets...");
+      // For regrets, we can post directly as 0 guests
+      try {
+        await fetch(WEB_APP_URL, {
+          method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber: 0, guestNames: ["DECLINED RSVP"] })
+        });
+        setTimeout(() => { toggleLoading(false); showScreen("sorryScreen"); }, 1000);
+      } catch(e) { toggleLoading(false); showScreen("sorryScreen"); }
+      return;
+    }
+    
+    toggleLoading(true, "Verifying Name...");
+    try {
+      const res = await fetch(WEB_APP_URL + "?checkName=" + encodeURIComponent(selectedName));
+      const data = await res.json();
+      toggleLoading(false);
+
+      maxGuests = inviteList[selectedName];
+      
+      if (data.exists) {
+        // Save old tracking info if they choose to override it later
+        prefilledGuestNames = data.previousData ? data.previousData.guestNames : [];
+        document.getElementById("seatCountInput").value = data.previousData ? data.previousData.guestNumber : 1;
+        showScreen("editPromptScreen");
+      } else {
+        prefilledGuestNames = [];
+        document.getElementById("seatCountInput").value = 1;
+        document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
+        document.getElementById("seatCountInput").max = maxGuests;
+        showScreen("seatScreen");
+      }
+    } catch (err) { toggleLoading(false); alert("Error connecting to server."); }
+  }
+
+  function proceedToEdit() {
+    document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
+    document.getElementById("seatCountInput").max = maxGuests;
+    showScreen("seatScreen");
+  }
+
+  function confirmSeats() {
+    const count = parseInt(document.getElementById("seatCountInput").value, 10);
+    if (isNaN(count) || count < 1 || count > maxGuests) {
+      alert(`Please enter a number between 1 and ${maxGuests}.`);
+      return;
+    }
+    guestNumber = count;
+    toggleLoading(true, "Preparing...");
+    setTimeout(() => {
+      toggleLoading(false);
+      createGuestFields(count);
+      showScreen("rsvpForm");
+    }, 800);
+  }
+
+  function createGuestFields(n) {
+    const container = document.getElementById("guestFields");
+    container.innerHTML = "";
+    for (let i = 1; i <= n; i++) {
+      const inp = document.createElement("input");
+      inp.type = "text"; 
+      inp.name = `guest${i}`; 
+      inp.placeholder = `Guest ${i} Name`;
+      inp.required = true; 
+      inp.classList.add("guest-input-box");
+      
+      // If we have previous history data available for this index array, pre-populate it!
+      if (prefilledGuestNames[i - 1]) {
+        inp.value = prefilledGuestNames[i - 1];
+      } else if (i === 1 && prefilledGuestNames.length === 0) {
+        // Default the first field to the main user's searched name for convenience
+        inp.value = selectedName;
+      }
+      
+      container.appendChild(inp);
+    }
+  }
+
+  document.getElementById("rsvpForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    toggleLoading(true, "Submitting RSVP...");
+    const guestNames = [];
+    for (let i = 1; i <= guestNumber; i++) { guestNames.push(this[`guest${i}`].value); }
+
+    try {
+      await fetch(WEB_APP_URL, {
+        method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber, guestNames })
+      });
+    } catch(err) { console.error(err); }
+
+    setTimeout(() => {
+      toggleLoading(false);
+      showScreen("thankYou");
+    }, 1500);
+  });
+
+  function startCountdown() {
+    const targetDate = new Date("October 10, 2026 00:00:00").getTime();
+    setInterval(() => {
+      const distance = targetDate - new Date().getTime();
+      document.getElementById("days").innerText = Math.floor(distance / 86400000);
+      document.getElementById("hours").innerText = Math.floor((distance % 86400000) / 3600000);
+      document.getElementById("minutes").innerText = Math.floor((distance % 3600000) / 60000);
+      document.getElementById("seconds").innerText = Math.floor((distance % 60000) / 1000);
+    }, 1000);
+  }
+  startCountdown();
+</script>
+</body>
+</html>

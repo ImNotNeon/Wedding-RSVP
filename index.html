@@ -3,248 +3,726 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wedding RSVP</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght=400;600&family=Tinos:wght=700&family=Montserrat:wght=400;500;600&family=Playfair+Display:wght=600&display=swap" rel="stylesheet">
+  <title>Audie & Kristen — October 10, 2026</title>
 
   <link rel="stylesheet" href="index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;500;600;700&family=Forum&family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <div class="logo-container">
-    <img src="Main.png" id="eventLogo" alt="Wedding Logo" class="main-logo">
-  </div>
+<!-- ░░ LOADING OVERLAY ░░ -->
+<div id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-label">Please wait…</div>
+</div>
 
-  <div id="loadingOverlay">
-    <div class="spinner"></div>
-    <div class="loading-text">Searching...</div>
-  </div>
-
-  <div id="nameScreen" class="screen transparent" style="display:block;">
-    <input type="text" id="guestNameInput" placeholder="🔍︎ ENTER NAME" autocomplete="off"/>
-    <div id="autocomplete-list" class="autocomplete-suggestions"></div>
-    <div class="attendance-text">
-      <p style="font-size: 0.85em;">Your presence would mean a lot to us,</p>
-      <p style="font-size: 1.1em; margin-top: -10px;">Will you make it to our special day?</p>
-    </div>
-    <div style="display: flex; gap: 70px; justify-content: center; margin-top: 15px;">
-      <a class="attendance-icon" onclick="checkName(true)" style="background-image: url('Yes.png');" role="button"></a>
-      <a class="attendance-icon" onclick="checkName(false)" style="background-image: url('No.png');" role="button"></a>
+<!-- ══════════════════════════════════════════
+     PAGE 1 — DASHBOARD
+═══════════════════════════════════════════ -->
+<div id="page-dashboard" class="page active">
+  <div class="logo-block">
+    <!-- Chi icon: replace img src with your RSVP-Chi-Logo.png -->
+    <div class="chi-icon">
+      <img src="RSVP-Chi-Logo.png" alt="" onerror="this.style.display='none'">
     </div>
   </div>
-
-  <div id="editPromptScreen" class="screen transparent">
-    <h2 style="font-size: 1.4em; font-family: Montserrat;">RSVP Found!</h2>
-    <p style="font-family: Montserrat; margin-bottom: 20px;">We have already received an RSVP for this name. Would you like to edit your response?</p>
-    <button class="decision-btn primary" onclick="proceedToEdit()">Yes, Edit My RSVP</button>
-    <button class="decision-btn" onclick="showScreen('nameScreen')">Go Back</button>
+  <div class="rule rule-wide"></div>
+  <div class="big-ak">
+    <!-- replace img src with your RSVP-AK-Logo.png or Main.png -->
+    <img src="RSVP-AK-Logo.png" alt="ak" onerror="this.outerHTML='ak'">
   </div>
 
-  <div id="seatScreen" class="screen transparent">
-    <h4 id="seatMessage"></h4>
-    <p style="font-family: Montserrat;">How many are attending?</p>
-    <input type="number" id="seatCountInput" min="1" value="1"/>
-    <button onclick="confirmSeats()">CONFIRM</button>
+  <div class="rule rule-wide"></div>
+  <p class="dash-label">Links that may help you</p>
+
+  <nav class="nav-icons">
+    <a class="nav-icon" onclick="showCeremony()">
+      <div class="nav-icon-img">
+        <!-- replace with: <img src="Church.png" alt="Ceremony"> -->
+        <img src="Ceremony.png" alt="Ceremony">
+      </div>
+      <span class="nav-icon-label">Ceremony</span>
+    </a>
+
+    <a class="nav-icon" href="https://maps.app.goo.gl/47ME3Vhk4NBPv9pQA" target="_blank" rel="noopener noreferrer">
+      <div class="nav-icon-img">
+        <!-- replace with: <img src="Reception.png" alt="Reception"> -->
+        <img src="Reception.png" alt="Reception">
+      </div>
+      <span class="nav-icon-label">Reception</span>
+    </a>
+
+    <a class="nav-icon" onclick="showRSVP()">
+      <div class="nav-icon-img">
+        <!-- replace with: <img src="Email.png" alt="RSVP"> -->
+        <img src="RSVP.png" alt="RSVP">
+      </div>
+      <span class="nav-icon-label">RSVP</span>
+    </a>
+  </nav>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — INVITATION (ceremony slide 1)
+═══════════════════════════════════════════ -->
+<div id="page-invitation" class="page">
+  <div class="logo-block">
   </div>
 
-  <form id="rsvpForm" class="screen transparent">
-    <h2>Please input name of attendees</h2>
-    <div id="guestFields"></div>
-    <button type="submit" style="width: 30%; background-color: #3e362b; color: #e7e3dc; padding:10px; border:none; cursor:pointer; font-weight:600;">RSVP</button>
-  </form>
+  <div class="ceremony-slide" onclick="nextCeremonySlide(3)">
+    <p class="blessing-text">With the blessing of our parents</p>
+    <div class="parents-row">
+      <div>Andrew Co<br>Lillian D. Co</div>
+      <div class="parents-divider">
+        <img src="RSVP-Chi-Logo.png" alt="" onerror="this.style.display='none'">
+      </div>
+      <div>Freddie Lim<br>Juliet T. Lim</div>
+    </div>
 
-  <div id="sorryScreen" class="screen transparent">
-    <p class="cambria-text">
-      While we're sad you can't be with us in person, <br>
-      we are deeply thankful for your love and support. <br><br>
-      Your presence in our lives is a gift <br>
-      and we look forward to celebrating life's moments together in the future.
+    <p class="invite-script">We,</p>
+    <p class="invite-names">AUDIE LAURENCE</p>
+    <p class="invite-and">and</p>
+    <p class="invite-names">KRISTEN JULIANE</p>
+
+    <p class="invite-body">
+      request the honor of your presence as we celebrate<br>
+      our union in the Sacrament of Holy Matrimony on
     </p>
+
+    <div class="date-block">
+      <div class="date-side">
+        <div class="date-side-rule"></div>
+        <span class="date-side-label">Saturday</span>
+        <div class="date-side-rule"></div>
+      </div>
+      <div class="date-center">
+        <span class="date-month">October</span>
+        <span class="date-day">10</span>
+        <span class="date-year">2 0 2 6</span>
+      </div>
+      <div class="date-side">
+        <div class="date-side-rule"></div>
+        <span class="date-side-label">1:00 PM</span>
+        <div class="date-side-rule"></div>
+      </div>
+    </div>
+
+    <div class="venue-block">
+      <p class="venue-name">CHRIST THE KING PARISH</p>
+      <p class="venue-sub">Green Meadows, Quezon City</p>
+    </div>
+
+    <p class="reception-intro">Reception follows at</p>
+    <div class="venue-block" style="margin-top:6px;">
+      <p class="venue-name">THE WESTIN MANILA</p>
+      <p class="venue-sub">Ortigas Center, Mandaluyong City</p>
+    </div>
+
+    <p class="tap-hint">Tap to continue</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 3 — PRINCIPAL SPONSORS
+═══════════════════════════════════════════ -->
+<div id="page-sponsors1" class="page">
+  <div class="logo-block">
+    <div class="ak-logo" id="p-sponsors"><img src="Logo.png" alt="ak" onerror="this.outerHTML='<span>ak</span>'"></div>
   </div>
 
-  <div id="thankYou" class="screen transparent">
-    <div id="timer">
-      <div class="time-unit"><span id="days">00</span>Days</div>
-      <div class="time-unit"><span id="hours">00</span>Hrs</div>
-      <div class="time-unit"><span id="minutes">00</span>Mins</div>
-      <div class="time-unit"><span id="seconds">00</span>Secs</div>
+  <div class="ceremony-slide" onclick="nextCeremonySlide(4)">
+    <p class="section-title">Principal Sponsors</p>
+    <div class="sponsors-grid">
+      <span class="name">Mr. Robert Chua</span>
+      <span class="name">Mrs. Gladys Mae Chua</span>
+      <span class="name">Ar. Roberto Ocampo</span>
+      <span class="name">Ms. Anita Lim</span>
+      <span class="name">Mr. Johnson Dy</span>
+      <span class="name">Mrs. Bernadine Dy</span>
     </div>
-    <p style="font-family: Playfair Display; font-size: 1.2em;">Links that may help you</p>
-    <div class="icon-row">
-      <a href="https://maps.app.goo.gl/gHSZ2TiaBB8LUH3M7" target="_blank" rel="noopener noreferrer" class="icon-link" style="background-image: url('Church.png');"></a>
-      <a href="https://maps.app.goo.gl/47ME3Vhk4NBPv9pQA" target="_blank" rel="noopener noreferrer" class="icon-link" style="background-image: url('Reception.png');"></a>
-      <a href="mailto:yourweddingemail@example.com" target="_blank" rel="noopener noreferrer" class="icon-link" style="background-image: url('Email.png');"></a>
+
+    <div class="role-pair">
+      <div class="role-col">
+        <p class="role-label">Best Man</p>
+        <p class="role-name">Jeremy Joson</p>
+      </div>
+      <div class="role-col">
+        <p class="role-label">Man of Honor</p>
+        <p class="role-name">Raphael Lim</p>
+      </div>
     </div>
+
+    <div class="role-single">
+      <p class="role-label">Matron of Honor</p>
+      <p class="role-name">Janine Eunice Tangtatco-Cantor</p>
+    </div>
+
+    <div class="role-pair">
+      <div class="role-col" >
+        <p class="role-label">Groomsmen</p>
+        <p class="role-name" id="grooms-row">Vincent Hontiveros</p>
+        <p class="role-name" id="grooms-row">John Chua</p>
+        <p class="role-name" id="grooms-row">Allen Copok</p>
+        <p class="role-name" id="grooms-row">Dan Balanzat</p>
+        <p class="role-name" id="grooms-row">Eldridge Liao</p>
+        <p class="role-name" id="grooms-row">Joseph Ngo</p>
+        <p class="role-name" id="grooms-row">Jay Llanos-Dee</p>
+        <p class="role-name" id="grooms-row">Michael Chua</p>
+      </div>
+      <div class="role-col">
+        <p class="role-label">Bridesmaids</p>
+        <p class="role-name">Bea Selina Chua-Lin<br>Annika Jeuel Duyan<br>Tiffany Jill Te<br>Brittany Gail Te<br>Dianne Ritz Te<br>Jiarri Lim</p>
+        <p class="role-label" style="margin-top:10px;">Bridesman</p>
+        <p class="role-name">Peterich Chiuwan<br>George Clinton Cantor</p>
+      </div>
+    </div>
+
+    <p class="tap-hint">Tap to continue</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 4 — SECONDARY SPONSORS
+═══════════════════════════════════════════ -->
+<div id="page-sponsors2" class="page">
+  <div class="logo-block">
+    <div class="ak-logo" id="p-sponsors"><img src="Logo.png" alt="ak" onerror="this.outerHTML='<span>ak</span>'"></div>
   </div>
 
+  <div class="ceremony-slide" onclick="nextCeremonySlide(5)">
+    <p class="section-title">Secondary Sponsors</p>
+
+    <div class="role-pair" style="margin-bottom:12px;">
+      <div class="role-col">
+        <p class="role-label">Candle</p>
+        <p class="role-name">Louie Chuaquico<br>Carmela Dy-Santos</p>
+      </div>
+      <div class="role-col">
+        <p class="role-label">Cord</p>
+        <p class="role-name">Aaron Lester Co<br>Lesley Ann Co</p>
+      </div>
+    </div>
+
+    <div class="role-single">
+      <p class="role-label">Veil</p>
+      <p class="role-name">Mark Lester Go<br>Ma. Luisa Sabidong</p>
+    </div>
+
+    <div class="role-pair">
+      <div class="role-col">
+        <p class="role-label">Coin Bearer</p>
+        <p class="role-name">Jarren Noah Chua</p>
+      </div>
+      <div class="role-col">
+        <p class="role-label">Bible Bearer</p>
+        <p class="role-name">Keito Alonzo Ong</p>
+      </div>
+    </div>
+
+    <div class="role-single" style="margin-top:10px;">
+      <p class="role-label">Ring Bearer</p>
+      <p class="role-name">Jacob Elisse Alexander Cantor</p>
+    </div>
+
+    <div class="role-pair">
+      <div class="role-col">
+        <p class="role-label">Flower Girls</p>
+        <p class="role-name">Celine Jianna Dy<br>Leandra Ninonuevo<br>Valeria Ninonuevo</p>
+      </div>
+      <div class="role-col">
+        <p class="role-label">Flower Dogs</p>
+        <p class="role-name">Yuki Lim<br>Marley Co<br>Tabby Co</p>
+      </div>
+    </div>
+
+    <p class="tap-hint">Tap to continue</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 5 — PROGRAM
+═══════════════════════════════════════════ -->
+<div id="page-program" class="page">
+  <div class="ceremony-slide" onclick="nextCeremonySlide(6)">
+    <div class="d-ceremony-title">
+      <p class="program-title">Program</p>
+    </div>
+
+    <div class="program-grid">
+      <!-- LEFT column: times & labels for odd rows -->
+      <div class="prog-col" id="prog-left">
+        <div class="prog-item">
+          <span class="prog-time">1:00 PM</span>
+          <div class="prog-rule"></div>
+          <span class="prog-label">Ceremony</span>
+        </div>
+        <div class="prog-item">
+          <!-- cocktails icon placeholder -->
+          <div class="prog-icon">
+            <img src="Cocktails.png" alt="Cocktails">
+          </div>
+        </div>
+        <div class="prog-item">
+          <span class="prog-time">7:00 PM</span>
+          <div class="prog-rule"></div>
+          <span class="prog-label">Dinner</span>
+        </div>
+        <div class="prog-item">
+          <!-- shoes icon placeholder -->
+          <div class="prog-icon">
+            <img src="Afterparty.png" alt="Afterparty">
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER divider -->
+      <div class="prog-divider-line"></div>
+
+      <!-- RIGHT column: icons & labels for even rows -->
+      <div class="prog-col">
+        <div class="prog-item">
+          <!-- church illustration placeholder -->
+          <div class="prog-icon">
+            <img src="Church.png" alt="Church">
+          </div>
+        </div>
+        <div class="prog-item">
+          <span class="prog-time">5:00 PM</span>
+          <div class="prog-rule"></div>
+          <span class="prog-label">Cocktails</span>
+        </div>
+        <div class="prog-item">
+          <!-- hotel illustration placeholder -->
+          <div class="prog-icon">
+            <img src="Westin.png" alt="Westin">
+          </div>
+        </div>
+        <div class="prog-item">
+          <span class="prog-time">10:30 PM</span>
+          <div class="prog-rule"></div>
+          <span class="prog-label">After Party</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="tap-hint">Tap to continue</p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 6 — DETAILS
+═══════════════════════════════════════════ -->
+<div id="page-details" class="page">
+  <div class="d-ceremony-slide" onclick="showRSVP()">
+    <p class="details-title">Details</p>
+
+    <!-- Dress Code -->
+    <div class="detail-row" style="align-items:right;">
+      <div class="detail-illustrations">
+        <!-- placeholder suit/dress icons -->
+        <img src="Suit.png" alt="Suit">
+        <img src="Dress.png" alt="Dress">
+      </div>
+      <div style="text-align:right;">
+        <p class="detail-heading">Dress Code</p>
+        <p class="detail-body">Formal attire is requested.</p>
+      </div>
+    </div>
+
+    <div class="detail-vert-rule" style="align-self:flex-end; width: 1px; margin-right:5px; background-color: #736e69;"></div>
+
+    <!-- Accommodation -->
+    <div class="detail-block" style="text-align:right; margin-top:10px;">
+      <p class="detail-heading">Accommodation</p>
+      <p class="detail-body">
+        For guests who wish to check in during the weekend,<br>
+        discounted rates are available thru the link below:<br>
+        <a href="https://www.marriott.com/event-reservations/reservation-link.mi?id=1727338324461&key=CORP&guestreslink2=true" class="detail-link" target="_blank" rel="noopener noreferrer">Co-Lim Nuptials Weekend Hotel Reservation</a>
+      </p>
+    </div>
+
+    <div class="detail-vert-rule" style="align-self:flex-end; width: 1px; margin-right:5px; background-color: #736e69;"></div>
+    <!-- Contact -->
+    <div class="detail-block" style="text-align:right; margin-top:10px;">
+      <p class="detail-heading">Contact Information</p>
+      <p class="detail-body">
+        Should you need further assistance, reach us at<br>
+        Bride &amp; Groom · 0917 711 1751<br>
+        Hotel · 02 8256 2020
+      </p>
+    </div>
+
+    <p class="tap-hint" style="padding-top:14px;">Tap to RSVP</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 7 — RSVP ENTRY
+═══════════════════════════════════════════ -->
+<div id="page-rsvp" class="page">
+  <div class="logo-block">
+    <div class="ak-logo"><img src="Logo.png" alt="ak" onerror="this.outerHTML='<span>ak</span>'"></div>
+  </div>
+
+  <p class="rsvp-hero">RS<br>VP</p>
+  <p class="rsvp-deadline">by August 10th</p>
+
+  <p class="rsvp-sub">Your presence would mean a lot to us.</p>
+
+  <div class="name-field-wrap" style="width:100%;">
+    <input type="text" id="guestNameInput" class="name-input"
+           placeholder="Enter your name here" autocomplete="off" />
+    <div id="autocomplete-list" class="autocomplete-list"></div>
+  </div>
+
+  <div class="rule" style="margin: 24px 0 20px; height: 1.2px; width: 360px;"></div>
+
+  <p class="rsvp-sub-2" style="margin-bottom:14px;">Will you make it to our special day?</p>
+
+  <div class="yn-row">
+    <button class="yn-btn" onclick="checkName(true)">
+      <!-- replace with: <img src="Yes.png" alt="Yes"> -->
+      YES
+    </button>
+    <button class="yn-btn" onclick="checkName(false)">
+      <!-- replace with: <img src="No.png" alt="No"> -->
+      NO
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE — EDIT PROMPT
+═══════════════════════════════════════════ -->
+<div id="page-edit-prompt" class="page">
+  <div class="logo-block">
+    <div class="ak-logo"><img src="Logo.png" alt="ak" onerror="this.outerHTML='<span>ak</span>'"></div>
+    <div class="rule rule-wide"></div>
+  </div>
+  <p class="rsvp-hero" style="font-size: clamp(3rem,12vw,5rem); margin-top:20px;">RSVP<br>Found</p>
+  <p class="edit-msg">We already have an RSVP for this name.<br>Would you like to update your response?</p>
+  <button class="cta-btn dark" onclick="proceedToEdit()">Yes, Edit My RSVP</button>
+  <button class="ghost-btn" onclick="show('page-rsvp')">Go Back</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 8 — SORRY / GRATEFUL
+═══════════════════════════════════════════ -->
+<div id="page-sorry" class="page">
+  <div class="logo-block">
+    <div class="ak-logo"><img src="Logo.png" style="margin-bottom: 30px;" alt="ak" onerror="this.outerHTML='<span>ak</span>'"></div>
+    <div class="rule rule-wide"></div>
+  </div>
+
+  <p class="grateful-title">
+    Forever Grateful
+  </p>
+  <p class="grateful-titles">
+    For You
+  </p>
+
+  <p class="grateful-body">
+    While we're sad you can't be with us in person, we are deeply
+    thankful for your love and support.<br><br>
+    Your presence in our lives is a gift and we look forward to
+    celebrating life's moments together in the future.
+  </p>
+
+  <p class="grateful-sig">With Love,<br>Auds and Ten</p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 9 — HOW MANY SEATS
+═══════════════════════════════════════════ -->
+<div id="page-seats" class="page">
+  <div class="logo-block">
+    <div class="ak-logo"><img src="Logo.png" alt="ak" onerror="this.outerHTML='<span>ak</span>'"></div>
+    <div class="rule rule-wide"></div>
+  </div>
+ 
+  <p class="rsvp-hero">RS<br>VP</p>
+ 
+  <p class="seats-hero-label">We have reserved</p>
+  <div class="seats-number-box">
+    <span id="seatDisplay" style="font-family:'Cormorant SC',serif; font-size:clamp(2.5rem,14vw,5rem); font-weight:400; color:var(--ink); line-height:1; text-shadow: 1px 1px rgba(0, 0, 0, 0.4);">1</span>
+  </div>
+  <p class="seats-for-you">Seats for you</p>
+ 
+  <div class="rule" style="margin: 20px 0 18px;"></div>
+ 
+  <p class="seats-question">How many are attending?</p>
+  <input type="number" id="seatCountInput" class="name-input" min="1" value="1"
+         placeholder="Enter here"
+         style="-moz-appearance:textfield; -webkit-appearance:none;" />
+  <button class="cta-btn" onclick="confirmSeats()" style="margin-top:12px;">Confirm</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 10 — GUEST NAMES
+═══════════════════════════════════════════ -->
+<div id="page-guest-names" class="page">
+  <div class="logo-block">
+    <div class="ak-logo"><img src="Logo.png" style="margin-bottom: 30px;" alt="ak" onerror="this.outerHTML='<span>ak</span>'"></div>
+    <div class="rule rule-wide"></div>
+  </div>
+
+  <p class="guests-intro">
+    Please enter the complete names of<br>all parties attending.
+  </p>
+
+  <div class="guest-fields" id="guestFields"></div>
+
+  <button class="cta-btn dark" onclick="submitRSVP()" style="margin-top:18px;">Submit RSVP</button>
+
+  <p class="guests-intro">
+    You may opt to resubmit RSVP in case of changes (before deadline)
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 11 — SEE YOU THERE
+═══════════════════════════════════════════ -->
+<div id="page-thankyou" class="page">
+  <div class="logo-block">
+    <div class="chi-icon"><img src="RSVP-Chi-Logo.png" alt="" onerror="this.style.display='none'"></div>
+    <div class="rule rule-wide"></div>
+  </div>
+
+  <p class="syt-title">See You There</p>
+
+  <div class="ticket-card" onclick="show('page-dashboard')">
+    <img src="ReturnButton.png" alt="Return">
+  </div>
+
+  <div class="rule rule-wide"></div>
+
+  <div class="countdown">
+    <div class="count-unit"><span class="count-num" id="cd-days">--</span><span class="count-label">Days</span></div>
+    <div class="count-unit"><span class="count-num" id="cd-hrs">--</span><span class="count-label">Hrs</span></div>
+    <div class="count-unit"><span class="count-num" id="cd-min">--</span><span class="count-label">Min</span></div>
+    <div class="count-unit"><span class="count-num" id="cd-sec">--</span><span class="count-label">Sec</span></div>
+  </div>
+</div>
+
+<div id="customModal" class="modal-overlay">
+  <div class="modal-box">
+    <p id="modalMessage">Message goes here...</p>
+    <button class="cta-btn dark" onclick="closeModal()">OK</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     JAVASCRIPT — ALL LOGIC PRESERVED, UI WIRED TO NEW IDS
+════════════════════════════════════════════════════════════════ -->
 <script>
-  let inviteList = {};
-  let maxGuests = 0;
-  let selectedName = "";
-  let guestNumber = 0;
-  let prefilledGuestNames = []; // Global holder to store existing names if editing
+  /* ── State ───────────────────────────────────────────── */
+  let inviteList       = {};
+  let maxGuests        = 0;
+  let selectedName     = "";
+  let guestNumber      = 0;
+  let prefilledGuestNames = [];
 
-  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbygMtfWeCofI3_cOACjqqon2H8-0R4WQwa4VWVJXFcqT-fvRjFHxJ7yKbfLi5RnAZwC/exec";
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxJJFl93tUAUdWGfmqSgBP7eOe86cpJVYYOrIim_GAQ8_JbJQz8HtTdaCb_mdz-onhx/exec";
 
-  function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    document.getElementById(screenId).style.display = 'block';
+  function showModal(message) {
+    document.getElementById('modalMessage').innerText = message;
+    document.getElementById('customModal').style.display = 'flex';
+  }
 
-    const logoImg = document.getElementById('eventLogo');
-    if (screenId === 'rsvpForm' || screenId === 'sorryScreen' || screenId === 'editPromptScreen') {
-      logoImg.src = 'Logo.png';
-    } else if (screenId === 'thankYou') {
-      logoImg.src = 'TY.png';
-    } else {
-      logoImg.src = 'Main.png';
+  function closeModal() {
+    document.getElementById('customModal').style.display = 'none';
+  }
+
+  /* ── Navigation ─────────────────────────────────────── */
+  function show(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(pageId);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo(0, 0);
     }
-    window.scrollTo(0,0);
   }
 
-  function toggleLoading(show, text = "Searching...") {
-    const loader = document.getElementById('loadingOverlay');
-    loader.querySelector('.loading-text').innerText = text;
-    loader.style.display = show ? 'flex' : 'none';
+  function showCeremony() {
+    show('page-invitation');
   }
 
+  function showRSVP() {
+    show('page-rsvp');
+  }
+
+  /* Ceremony tap-through slides: 3=sponsors1, 4=sponsors2, 5=program, 6=details */
+  function nextCeremonySlide(slideNum) {
+    const map = {
+      3: 'page-sponsors1',
+      4: 'page-sponsors2',
+      5: 'page-program',
+      6: 'page-details',
+    };
+    if (map[slideNum]) show(map[slideNum]);
+  }
+
+  /* ── Loading overlay ────────────────────────────────── */
+  function toggleLoading(show_, text = "Please wait…") {
+    const overlay = document.getElementById('loadingOverlay');
+    overlay.querySelector('.loading-label').innerText = text;
+    overlay.style.display = show_ ? 'flex' : 'none';
+  }
+
+  /* ── Load invite list on boot ───────────────────────── */
   async function loadInviteList() {
     try {
       const res = await fetch(WEB_APP_URL);
       inviteList = await res.json();
-    } catch (err) { console.error(err); }
+    } catch (err) { console.error('Could not load invite list:', err); }
   }
   loadInviteList();
 
-  const input = document.getElementById("guestNameInput");
-  const suggestionBox = document.getElementById("autocomplete-list");
-  input.addEventListener("input", function() {
-    const query = this.value.toUpperCase();
-    suggestionBox.innerHTML = "";
-    if (!query) { suggestionBox.style.display = "none"; return; }
-    const matches = Object.keys(inviteList).filter(name => name.includes(query));
-    if (matches.length === 0) { suggestionBox.style.display = "none"; return; }
-    suggestionBox.style.display = "block";
-    matches.forEach(match => {
-      const div = document.createElement("div");
-      div.innerText = match;
-      div.onclick = () => { input.value = match; suggestionBox.style.display = "none"; };
-      suggestionBox.appendChild(div);
+  /* ── Autocomplete ───────────────────────────────────── */
+  const input        = document.getElementById('guestNameInput');
+  const suggBox      = document.getElementById('autocomplete-list');
+
+  input.addEventListener('input', function () {
+    const q = this.value.toUpperCase();
+    suggBox.innerHTML = '';
+    if (!q) { suggBox.style.display = 'none'; return; }
+    const matches = Object.keys(inviteList).filter(n => n.includes(q));
+    if (!matches.length) { suggBox.style.display = 'none'; return; }
+    suggBox.style.display = 'block';
+    matches.forEach(m => {
+      const div = document.createElement('div');
+      div.innerText = m;
+      div.onclick = () => { input.value = m; suggBox.style.display = 'none'; };
+      suggBox.appendChild(div);
     });
   });
 
+  /* ── Check name / attend decision ──────────────────── */
   async function checkName(isAttending) {
     selectedName = input.value.trim().toUpperCase();
     if (!selectedName || !inviteList[selectedName]) {
-      alert("Name not found. Please enter name exactly as on invitation.");
+      showModal('Name not found. Please enter your name exactly as on the invitation.');
       return;
     }
 
     if (!isAttending) {
-      toggleLoading(true, "Sending Regrets...");
-      // For regrets, we can post directly as 0 guests
+      toggleLoading(true, 'Sending regrets…');
       try {
         await fetch(WEB_APP_URL, {
-          method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber: 0, guestNames: ["DECLINED RSVP"] })
+          method: 'POST', mode: 'no-cors',
+          body: JSON.stringify({ name: selectedName, guestNumber: 0, guestNames: ['DECLINED RSVP'] })
         });
-        setTimeout(() => { toggleLoading(false); showScreen("sorryScreen"); }, 1000);
-      } catch(e) { toggleLoading(false); showScreen("sorryScreen"); }
+        setTimeout(() => { toggleLoading(false); show('page-sorry'); }, 1000);
+      } catch (e) { toggleLoading(false); show('page-sorry'); }
       return;
     }
-    
-    toggleLoading(true, "Verifying Name...");
+
+    toggleLoading(true, 'Verifying…');
     try {
-      const res = await fetch(WEB_APP_URL + "?checkName=" + encodeURIComponent(selectedName));
+      const res  = await fetch(WEB_APP_URL + '?checkName=' + encodeURIComponent(selectedName));
       const data = await res.json();
       toggleLoading(false);
-
       maxGuests = inviteList[selectedName];
-      
+
       if (data.exists) {
-        // Save old tracking info if they choose to override it later
         prefilledGuestNames = data.previousData ? data.previousData.guestNames : [];
-        document.getElementById("seatCountInput").value = data.previousData ? data.previousData.guestNumber : 1;
-        showScreen("editPromptScreen");
+        document.getElementById('seatCountInput').value = data.previousData ? data.previousData.guestNumber : 1;
+        show('page-edit-prompt');
       } else {
         prefilledGuestNames = [];
-        document.getElementById("seatCountInput").value = 1;
-        document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
-        document.getElementById("seatCountInput").max = maxGuests;
-        showScreen("seatScreen");
-      }
-    } catch (err) { toggleLoading(false); alert("Error connecting to server."); }
+        document.getElementById('seatDisplay').innerText = maxGuests;
+        document.getElementById('seatCountInput').value = 1;
+        document.getElementById('seatCountInput').max = maxGuests;
+        show('page-seats');
+      }alert
+    } catch (err) { 
+      toggleLoading(false); 
+      showModal('Error connecting to server. Please check your internet connection.');
+    }
   }
 
   function proceedToEdit() {
-    document.getElementById("seatMessage").innerText = `We've reserved ${maxGuests} seats for you!`;
-    document.getElementById("seatCountInput").max = maxGuests;
-    showScreen("seatScreen");
+    document.getElementById('seatDisplay').innerText = maxGuests;
+    document.getElementById('seatCountInput').value = 1;
+    document.getElementById('seatCountInput').max = maxGuests;
+    show('page-seats');
   }
 
+  /* ── Confirm seats ──────────────────────────────────── */
   function confirmSeats() {
-    const count = parseInt(document.getElementById("seatCountInput").value, 10);
+    const count = parseInt(document.getElementById('seatCountInput').value, 10);
     if (isNaN(count) || count < 1 || count > maxGuests) {
-      alert(`Please enter a number between 1 and ${maxGuests}.`);
+      showModal(`Please enter a number between 1 and ${maxGuests}.`);
       return;
     }
     guestNumber = count;
-    toggleLoading(true, "Preparing...");
+    toggleLoading(true, 'Preparing…');
     setTimeout(() => {
       toggleLoading(false);
-      createGuestFields(count);
-      showScreen("rsvpForm");
+      buildGuestFields(count);
+      show('page-guest-names');
     }, 800);
   }
 
-  function createGuestFields(n) {
-    const container = document.getElementById("guestFields");
-    container.innerHTML = "";
+  function buildGuestFields(n) {
+    const container = document.getElementById('guestFields');
+    container.innerHTML = '';
     for (let i = 1; i <= n; i++) {
-      const inp = document.createElement("input");
-      inp.type = "text"; 
-      inp.name = `guest${i}`; 
-      inp.placeholder = `Guest ${i} Name`;
-      inp.required = true; 
-      inp.classList.add("guest-input-box");
-      
-      // If we have previous history data available for this index array, pre-populate it!
+      const inp = document.createElement('input');
+      inp.type        = 'text';
+      inp.name        = `guest${i}`;
+      inp.placeholder = `Guest ${i}: First and Last Name`;
+      inp.required    = true;
+      inp.className   = 'guest-input';
       if (prefilledGuestNames[i - 1]) {
         inp.value = prefilledGuestNames[i - 1];
-      } else if (i === 1 && prefilledGuestNames.length === 0) {
-        // Default the first field to the main user's searched name for convenience
-        inp.value = selectedName;
-      }
-      
+      } 
       container.appendChild(inp);
     }
   }
 
-  document.getElementById("rsvpForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    toggleLoading(true, "Submitting RSVP...");
+  /* ── Submit RSVP ────────────────────────────────────── */
+  async function submitRSVP() {
+    const fields = document.querySelectorAll('#guestFields .guest-input');
     const guestNames = [];
-    for (let i = 1; i <= guestNumber; i++) { guestNames.push(this[`guest${i}`].value); }
+    let valid = true;
+    fields.forEach(f => {
+      if (!f.value.trim()) valid = false;
+      guestNames.push(f.value.trim());
+    });
+    if (!valid) { showModal('Please fill in all guest names.'); return; }
 
+    toggleLoading(true, 'Submitting RSVP…');
     try {
       await fetch(WEB_APP_URL, {
-        method: "POST", mode: "no-cors", body: JSON.stringify({ name: selectedName, guestNumber, guestNames })
+        method: 'POST', mode: 'no-cors',
+        body: JSON.stringify({ name: selectedName, guestNumber, guestNames })
       });
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
 
     setTimeout(() => {
       toggleLoading(false);
-      showScreen("thankYou");
+      show('page-thankyou');
     }, 1500);
-  });
+  }
 
+  /* ── Countdown ──────────────────────────────────────── */
   function startCountdown() {
-    const targetDate = new Date("October 10, 2026 00:00:00").getTime();
-    setInterval(() => {
-      const distance = targetDate - new Date().getTime();
-      document.getElementById("days").innerText = Math.floor(distance / 86400000);
-      document.getElementById("hours").innerText = Math.floor((distance % 86400000) / 3600000);
-      document.getElementById("minutes").innerText = Math.floor((distance % 3600000) / 60000);
-      document.getElementById("seconds").innerText = Math.floor((distance % 60000) / 1000);
-    }, 1000);
+    const target = new Date('October 10, 2026 13:00:00').getTime();
+    function tick() {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        ['cd-days','cd-hrs','cd-min','cd-sec'].forEach(id => document.getElementById(id).innerText = '00');
+        return;
+      }
+      document.getElementById('cd-days').innerText = String(Math.floor(diff / 86400000)).padStart(2,'0');
+      document.getElementById('cd-hrs').innerText  = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
+      document.getElementById('cd-min').innerText  = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+      document.getElementById('cd-sec').innerText  = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+    }
+    tick();
+    setInterval(tick, 1000);
   }
   startCountdown();
 </script>
