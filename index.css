@@ -1041,3 +1041,44 @@ input[type="number"].pill-input::-webkit-outer-spin-button {
         transform: translateY(0) scale(1);
     }
 }
+
+/* ── DASHBOARD MONOGRAM BUTTON ─────────────────────────── */
+.monogram-button {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Subtle shrink feedback when a guest taps it */
+.monogram-button:active {
+    transform: scale(0.96);
+}
+
+/* Elegant, micro-spaced text hint matching your wedding theme */
+.monogram-tap-hint {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-top: 14px;
+    opacity: 0.7;
+    animation: elegantPulse 2.5s infinite ease-in-out;
+}
+
+/* Soft breathing animation so it catches the eye without being distracting */
+@keyframes elegantPulse {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(0.98);
+    }
+    50% {
+        opacity: 0.85;
+        transform: scale(1.02);
+    }
+}
