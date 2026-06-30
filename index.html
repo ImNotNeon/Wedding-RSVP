@@ -18,19 +18,26 @@
   <div class="loading-label">Please wait…</div>
 </div>
 
+<!-- ░░ FLOATING BACK BUTTON ░░ -->
+<button id="backBtn" class="back-fab" onclick="goBack()" aria-label="Go back">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <!-- curved back arrow -->
+    <path d="M9 14 L4 9 L9 4" />
+    <path d="M4 9 Q12 9 14 12 Q17 16 17 20" />
+  </svg>
+</button>
+
 <!-- ══════════════════════════════════════════
      PAGE 1 — DASHBOARD
 ═══════════════════════════════════════════ -->
 <div id="page-dashboard" class="page active">
   <div class="logo-block">
-    <!-- Chi icon: replace img src with your RSVP-Chi-Logo.png -->
     <div class="chi-icon">
       <img src="RSVP-Chi-Logo.png" alt="" onerror="this.style.display='none'">
     </div>
   </div>
   <div class="rule rule-wide"></div>
   <div class="big-ak">
-    <!-- replace img src with your RSVP-AK-Logo.png or Main.png -->
     <img src="RSVP-AK-Logo.png" alt="ak" onerror="this.outerHTML='ak'">
   </div>
 
@@ -38,9 +45,8 @@
   <p class="dash-label">Links that may help you</p>
 
   <nav class="nav-icons">
-    <a class="nav-icon" onclick="showCeremony()">
+    <a class="nav-icon" href="https://maps.app.goo.gl/7sSv5A1jYLpgB9SD6" target="_blank" rel="noopener noreferrer">
       <div class="nav-icon-img">
-        <!-- replace with: <img src="Church.png" alt="Ceremony"> -->
         <img src="Ceremony.png" alt="Ceremony">
       </div>
       <span class="nav-icon-label">Ceremony</span>
@@ -48,15 +54,13 @@
 
     <a class="nav-icon" href="https://maps.app.goo.gl/47ME3Vhk4NBPv9pQA" target="_blank" rel="noopener noreferrer">
       <div class="nav-icon-img">
-        <!-- replace with: <img src="Reception.png" alt="Reception"> -->
         <img src="Reception.png" alt="Reception">
       </div>
       <span class="nav-icon-label">Reception</span>
     </a>
 
-    <a class="nav-icon" onclick="showRSVP()">
+    <a class="nav-icon" onclick="showCeremony()">
       <div class="nav-icon-img">
-        <!-- replace with: <img src="Email.png" alt="RSVP"> -->
         <img src="RSVP.png" alt="RSVP">
       </div>
       <span class="nav-icon-label">RSVP</span>
@@ -251,7 +255,7 @@
     </div>
 
     <div class="program-grid">
-      <!-- LEFT column: times & labels for odd rows -->
+      <!-- LEFT column -->
       <div class="prog-col" id="prog-left">
         <div class="prog-item">
           <span class="prog-time">1:00 PM</span>
@@ -259,7 +263,6 @@
           <span class="prog-label">Ceremony</span>
         </div>
         <div class="prog-item">
-          <!-- cocktails icon placeholder -->
           <div class="prog-icon">
             <img src="Cocktails.png" alt="Cocktails">
           </div>
@@ -270,7 +273,6 @@
           <span class="prog-label">Dinner</span>
         </div>
         <div class="prog-item">
-          <!-- shoes icon placeholder -->
           <div class="prog-icon">
             <img src="Afterparty.png" alt="Afterparty">
           </div>
@@ -280,10 +282,9 @@
       <!-- CENTER divider -->
       <div class="prog-divider-line"></div>
 
-      <!-- RIGHT column: icons & labels for even rows -->
+      <!-- RIGHT column -->
       <div class="prog-col">
         <div class="prog-item">
-          <!-- church illustration placeholder -->
           <div class="prog-icon">
             <img src="Church.png" alt="Church">
           </div>
@@ -294,7 +295,6 @@
           <span class="prog-label">Cocktails</span>
         </div>
         <div class="prog-item">
-          <!-- hotel illustration placeholder -->
           <div class="prog-icon">
             <img src="Westin.png" alt="Westin">
           </div>
@@ -320,11 +320,10 @@
     <!-- Dress Code -->
     <div class="detail-row" style="align-items:right;">
       <div class="detail-illustrations">
-        <!-- placeholder suit/dress icons -->
         <img src="Suit.png" alt="Suit">
         <img src="Dress.png" alt="Dress">
       </div>
-      <div style="text-align:right;">
+      <div style="text-align:right;" id="detail-texts">
         <p class="detail-heading">Dress Code</p>
         <p class="detail-body">Formal attire is requested.</p>
       </div>
@@ -376,17 +375,15 @@
     <div id="autocomplete-list" class="autocomplete-list"></div>
   </div>
 
-  <div class="rule" style="margin: 24px 0 20px; height: 1.2px; width: 360px;"></div>
+  <div class="rule" style="margin: 24px 0 20px; height: 1.2px; width: 300px;"></div>
 
   <p class="rsvp-sub-2" style="margin-bottom:14px;">Will you make it to our special day?</p>
 
   <div class="yn-row">
     <button class="yn-btn" onclick="checkName(true)">
-      <!-- replace with: <img src="Yes.png" alt="Yes"> -->
       YES
     </button>
     <button class="yn-btn" onclick="checkName(false)">
-      <!-- replace with: <img src="No.png" alt="No"> -->
       NO
     </button>
   </div>
@@ -445,7 +442,7 @@
  
   <p class="seats-hero-label">We have reserved</p>
   <div class="seats-number-box">
-    <span id="seatDisplay" style="font-family:'Cormorant SC',serif; font-size:clamp(2.5rem,14vw,5rem); font-weight:400; color:var(--ink); line-height:1; text-shadow: 1px 1px rgba(0, 0, 0, 0.4);">1</span>
+    <span id="seatDisplay" style="font-family:'Forum',serif; font-size:clamp(2.5rem,14vw,5rem); font-weight:400; color:var(--ink); line-height:1; text-shadow: 1px 1px rgba(0, 0, 0, 0.4);">1</span>
   </div>
   <p class="seats-for-you">Seats for you</p>
  
@@ -513,7 +510,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     JAVASCRIPT — ALL LOGIC PRESERVED, UI WIRED TO NEW IDS
+     JAVASCRIPT
 ════════════════════════════════════════════════════════════════ -->
 <script>
   /* ── State ───────────────────────────────────────────── */
@@ -523,7 +520,13 @@
   let guestNumber      = 0;
   let prefilledGuestNames = [];
 
+  /* Navigation history stack for back button */
+  let pageHistory = [];
+
   const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxJJFl93tUAUdWGfmqSgBP7eOe86cpJVYYOrIim_GAQ8_JbJQz8HtTdaCb_mdz-onhx/exec";
+
+  /* Pages where the back button should be hidden */
+  const NO_BACK_PAGES = new Set(['page-dashboard', 'page-thankyou', 'page-sorry']);
 
   function showModal(message) {
     document.getElementById('modalMessage').innerText = message;
@@ -535,12 +538,38 @@
   }
 
   /* ── Navigation ─────────────────────────────────────── */
-  function show(pageId) {
+  function show(pageId, pushHistory = true) {
+    const current = document.querySelector('.page.active');
+    const currentId = current ? current.id : null;
+
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     const target = document.getElementById(pageId);
     if (target) {
       target.classList.add('active');
-      window.scrollTo(0, 0);
+      /* scroll the page container back to top */
+      target.scrollTop = 0;
+    }
+
+    /* Manage history stack */
+    if (pushHistory && currentId && currentId !== pageId) {
+      pageHistory.push(currentId);
+    }
+
+    updateBackButton(pageId);
+  }
+
+  function goBack() {
+    if (pageHistory.length === 0) return;
+    const prev = pageHistory.pop();
+    show(prev, false); /* false = don't push to history again */
+  }
+
+  function updateBackButton(pageId) {
+    const btn = document.getElementById('backBtn');
+    if (NO_BACK_PAGES.has(pageId) || pageHistory.length === 0) {
+      btn.classList.remove('back-fab--visible');
+    } else {
+      btn.classList.add('back-fab--visible');
     }
   }
 
@@ -552,7 +581,7 @@
     show('page-rsvp');
   }
 
-  /* Ceremony tap-through slides: 3=sponsors1, 4=sponsors2, 5=program, 6=details */
+  /* Ceremony tap-through slides */
   function nextCeremonySlide(slideNum) {
     const map = {
       3: 'page-sponsors1',
@@ -635,7 +664,7 @@
         document.getElementById('seatCountInput').value = 1;
         document.getElementById('seatCountInput').max = maxGuests;
         show('page-seats');
-      }alert
+      }
     } catch (err) { 
       toggleLoading(false); 
       showModal('Error connecting to server. Please check your internet connection.');
